@@ -1,4 +1,4 @@
-A GO microservice to calculate distance
+A RESTful Go server to authenticate users and store TODO tasks in a DB
 =======================
 
 This service responds to requests to calculate the straight-line distance between two sets of coordinates. 
