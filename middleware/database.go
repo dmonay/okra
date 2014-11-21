@@ -1,9 +1,11 @@
-package database
+package middleware
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/coopernurse/gorp"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 )
 
 func InitDb() *gorp.DbMap {
@@ -20,14 +22,14 @@ func InitDb() *gorp.DbMap {
 	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.MySQLDialect{"InnoDB", "UTF8"}}
 
 	// add a table
-	dbmap.AddTableWithName(User{}).SetKeys(true, "Id")
+	dbmap.AddTable(User{}).SetKeys(true, "Id")
 
 	// create the table
 	err = dbmap.CreateTablesIfNotExists()
 	checkErr(err, "Create tables failed")
-
+	fmt.Println("I ran")
 	// test insert
-	testQuery := &Queries{0, -210.5, 1133.5, -3.5, 42.7, "miles", 19700.4}
+	testQuery := &User{0, "John", "pwd"}
 	err = dbmap.Insert(testQuery)
 
 	return dbmap
@@ -37,4 +39,10 @@ type User struct {
 	Id       int64
 	Username string
 	Password string
+}
+
+func checkErr(err error, msg string) {
+	if err != nil {
+		log.Fatalln(msg, err)
+	}
 }

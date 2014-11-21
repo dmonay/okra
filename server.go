@@ -4,11 +4,16 @@ import (
 	// "fmt"
 	"github.com/codegangsta/martini"
 	"github.com/codegangsta/martini-contrib/binding"
-	"github.com/dmonay/do-work-api/database"
 	"github.com/dmonay/do-work-api/handlers"
+	"github.com/dmonay/do-work-api/middleware"
 )
 
 func main() {
+
+	//initialize mysql
+	dbmap := middleware.InitDb()
+	defer dbmap.Db.Close()
+
 	m := martini.Classic()
 
 	//define the endpoints
@@ -17,8 +22,4 @@ func main() {
 	m.Post("/logout", binding.Json(handlers.Credentials{}), handlers.Logout)
 
 	m.Run()
-
-	//initialize mysql
-	dbmap := InitDb()
-	defer dbmap.Db.Close()
 }
