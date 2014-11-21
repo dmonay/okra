@@ -2,24 +2,25 @@ package main
 
 import (
 	// "fmt"
-	"github.com/codegangsta/martini"
-	"github.com/codegangsta/martini-contrib/binding"
-	"github.com/dmonay/do-work-api/handlers"
-	"github.com/dmonay/do-work-api/middleware"
+
+	"github.com/codegangsta/cli"
+	"github.com/dmonay/do-work-api/database"
+	"os"
 )
 
 func main() {
 
-	//initialize mysql
-	dbmap := middleware.InitDb()
-	defer dbmap.Db.Close()
+	app := cli.NewApp()
+	app.Name = "Do-Work"
+	app.Usage = "Personal JIRA board"
+	app.Version = "0.0.1"
 
-	m := martini.Classic()
+	app.Flags = []cli.Flag{
+		cli.StringFlag{"config, c", "config.yaml", "config file to use", ""},
+	}
 
-	//define the endpoints
-	m.Post("/register", binding.Json(handlers.Credentials{}), handlers.Register)
-	m.Post("/login", binding.Json(handlers.Credentials{}), handlers.Login)
-	m.Post("/logout", binding.Json(handlers.Credentials{}), handlers.Logout)
+	app.Commands = database.Commands
 
-	m.Run()
+	app.Run(os.Args)
+
 }

@@ -1,4 +1,4 @@
-package middleware
+package database
 
 import (
 	"database/sql"
@@ -8,14 +8,13 @@ import (
 	"log"
 )
 
-func InitDb() *gorp.DbMap {
+func InitDb(cfg Config) (*gorp.DbMap, error) {
 
-	// set user and password for your SQL db here
-	user := "root"
-	pwd := "2Un62VIK"
+	connection := cfg.DbUser + ":" + cfg.DbPassword + "@/" + cfg.DbName
+	fmt.Println("connection: ", connection)
 
 	// connect to db
-	db, err := sql.Open("mysql", user+":"+pwd+"@/do_work")
+	db, err := sql.Open("mysql", connection)
 	checkErr(err, "sql.Open failed")
 
 	// construct a gorp DbMap
@@ -27,18 +26,24 @@ func InitDb() *gorp.DbMap {
 	// create the table
 	err = dbmap.CreateTablesIfNotExists()
 	checkErr(err, "Create tables failed")
-	fmt.Println("I ran")
+
 	// test insert
 	testQuery := &User{0, "John", "pwd"}
 	err = dbmap.Insert(testQuery)
 
-	return dbmap
+	return dbmap, nil
 }
 
 type User struct {
 	Id       int64
 	Username string
 	Password string
+}
+
+type Config struct {
+	DbUser     string
+	DbPassword string
+	DbName     string
 }
 
 func checkErr(err error, msg string) {
