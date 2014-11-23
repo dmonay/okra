@@ -5,11 +5,6 @@ import (
 	// "fmt"
 )
 
-type Credentials struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 type ErrorMsg struct {
 	Error string "json:'Error:'"
 }

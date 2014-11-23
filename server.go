@@ -4,7 +4,7 @@ import (
 	// "fmt"
 
 	"github.com/codegangsta/cli"
-	"github.com/dmonay/do-work-api/database"
+	"github.com/dmonay/do-work-api/handlers"
 	"os"
 )
 
@@ -19,7 +19,7 @@ func main() {
 		cli.StringFlag{"config, c", "config.yaml", "config file to use", ""},
 	}
 
-	app.Commands = database.Commands
+	app.Commands = handlers.Commands
 
 	app.Run(os.Args)
 

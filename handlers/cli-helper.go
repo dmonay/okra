@@ -1,18 +1,17 @@
-package database
+package handlers
 
 import (
 	"errors"
 	// "fmt"
 	"github.com/codegangsta/cli"
-	"github.com/codegangsta/martini"
-	"github.com/codegangsta/martini-contrib/binding"
+	"github.com/gin-gonic/gin"
 	// "github.com/coopernurse/gorp"
 	"github.com/dmonay/do-work-api/common"
-	"github.com/dmonay/do-work-api/handlers"
+	// "github.com/dmonay/do-work-api/handlers"
 	"gopkg.in/yaml.v1"
 	"io/ioutil"
 	"log"
-	"net/http"
+	// "net/http"
 	"os"
 )
 
@@ -40,24 +39,17 @@ func Run(cfg common.Config) error {
 	if err != nil {
 		return err
 	}
-	defer dbmap.Db.Close()
+	// defer dbmap.Db.Close()
 
-	m := martini.Classic()
+	doWorkResource := &DoWorkResource{db: dbmap}
 
-	m.Post("/register", binding.Json(handlers.Credentials{}), func(attr handlers.Credentials, erro binding.Errors) (int, string) {
-		uname := attr.Username
+	r := gin.Default()
 
-		query := &common.User{0, uname, attr.Password}
-		err = dbmap.Insert(query)
+	r.POST("/register", doWorkResource.Register)
+	// r.POST("/login", handlers.Login)
+	// r.POST("/logout", handlers.Logout)
 
-		// pwd := attr.Password
-		return http.StatusOK, handlers.JsonString(handlers.SuccessMsg{"You have successfully registered, " + uname})
-	})
-
-	m.Post("/login", binding.Json(handlers.Credentials{}), handlers.Login)
-	m.Post("/logout", binding.Json(handlers.Credentials{}), handlers.Logout)
-
-	m.Run()
+	r.Run(cfg.SvcHost)
 
 	return nil
 }

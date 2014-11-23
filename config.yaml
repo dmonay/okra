@@ -1,3 +1,4 @@
+svchost: :8080
 dbuser: root
 dbpassword: "2Un62VIK"
 dbname: do_work

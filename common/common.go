@@ -11,7 +11,13 @@ type User struct {
 }
 
 type Config struct {
+	SvcHost    string
 	DbUser     string
 	DbPassword string
 	DbName     string
+}
+
+type Credentials struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
