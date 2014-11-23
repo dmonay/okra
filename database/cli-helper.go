@@ -2,19 +2,23 @@ package database
 
 import (
 	"errors"
+	// "fmt"
 	"github.com/codegangsta/cli"
 	"github.com/codegangsta/martini"
 	"github.com/codegangsta/martini-contrib/binding"
+	// "github.com/coopernurse/gorp"
+	"github.com/dmonay/do-work-api/common"
 	"github.com/dmonay/do-work-api/handlers"
 	"gopkg.in/yaml.v1"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 )
 
-func getConfig(c *cli.Context) (Config, error) {
+func getConfig(c *cli.Context) (common.Config, error) {
 	yamlPath := c.GlobalString("config")
-	config := Config{}
+	config := common.Config{}
 
 	if _, err := os.Stat(yamlPath); err != nil {
 		return config, errors.New("config path not valid")
@@ -29,7 +33,7 @@ func getConfig(c *cli.Context) (Config, error) {
 	return config, err
 }
 
-func Run(cfg Config) error {
+func Run(cfg common.Config) error {
 
 	//initialize mysql
 	dbmap, err := InitDb(cfg)
@@ -40,8 +44,16 @@ func Run(cfg Config) error {
 
 	m := martini.Classic()
 
-	//define the endpoints
-	m.Post("/register", binding.Json(handlers.Credentials{}), handlers.Register)
+	m.Post("/register", binding.Json(handlers.Credentials{}), func(attr handlers.Credentials, erro binding.Errors) (int, string) {
+		uname := attr.Username
+
+		query := &common.User{0, uname, attr.Password}
+		err = dbmap.Insert(query)
+
+		// pwd := attr.Password
+		return http.StatusOK, handlers.JsonString(handlers.SuccessMsg{"You have successfully registered, " + uname})
+	})
+
 	m.Post("/login", binding.Json(handlers.Credentials{}), handlers.Login)
 	m.Post("/logout", binding.Json(handlers.Credentials{}), handlers.Logout)
 

@@ -2,48 +2,36 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
+	// "fmt"
 	"github.com/coopernurse/gorp"
+	"github.com/dmonay/do-work-api/common"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 )
 
-func InitDb(cfg Config) (*gorp.DbMap, error) {
+func InitDb(cfg common.Config) (*gorp.DbMap, error) {
 
 	connection := cfg.DbUser + ":" + cfg.DbPassword + "@/" + cfg.DbName
-	fmt.Println("connection: ", connection)
 
 	// connect to db
 	db, err := sql.Open("mysql", connection)
 	checkErr(err, "sql.Open failed")
 
 	// construct a gorp DbMap
-	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.MySQLDialect{"InnoDB", "UTF8"}}
+	UserDb := &gorp.DbMap{Db: db, Dialect: gorp.MySQLDialect{"InnoDB", "UTF8"}}
 
 	// add a table
-	dbmap.AddTable(User{}).SetKeys(true, "Id")
+	UserDb.AddTable(common.User{}).SetKeys(true, "Id")
 
 	// create the table
-	err = dbmap.CreateTablesIfNotExists()
+	err = UserDb.CreateTablesIfNotExists()
 	checkErr(err, "Create tables failed")
 
 	// test insert
-	testQuery := &User{0, "John", "pwd"}
-	err = dbmap.Insert(testQuery)
+	testQuery := &common.User{0, "John", "pwd"}
+	err = UserDb.Insert(testQuery)
 
-	return dbmap, nil
-}
-
-type User struct {
-	Id       int64
-	Username string
-	Password string
-}
-
-type Config struct {
-	DbUser     string
-	DbPassword string
-	DbName     string
+	return UserDb, nil
 }
 
 func checkErr(err error, msg string) {
