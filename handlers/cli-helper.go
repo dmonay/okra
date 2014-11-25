@@ -2,16 +2,13 @@ package handlers
 
 import (
 	"errors"
-	// "fmt"
+	"fmt"
 	"github.com/codegangsta/cli"
-	"github.com/gin-gonic/gin"
-	// "github.com/coopernurse/gorp"
 	"github.com/dmonay/do-work-api/common"
-	// "github.com/dmonay/do-work-api/handlers"
+	"github.com/gin-gonic/gin"
 	"gopkg.in/yaml.v1"
 	"io/ioutil"
 	"log"
-	// "net/http"
 	"os"
 )
 
@@ -41,16 +38,32 @@ func Run(cfg common.Config) error {
 	}
 	// defer dbmap.Db.Close()
 
+	dbmap.SingularTable(true)
+
 	doWorkResource := &DoWorkResource{db: dbmap}
 
 	r := gin.Default()
 
 	r.POST("/register", doWorkResource.Register)
-	// r.POST("/login", handlers.Login)
+	r.POST("/login", doWorkResource.Login)
 	// r.POST("/logout", handlers.Logout)
+	r.POST("/create", doWorkResource.Create)
 
 	r.Run(cfg.SvcHost)
 
+	return nil
+}
+
+func Migrate(cfg common.Config) error {
+	db, err := InitDb(cfg)
+	if err != nil {
+		return err
+	}
+	db.SingularTable(true)
+
+	db.CreateTable(&common.User{})
+
+	db.AutoMigrate(common.User{})
 	return nil
 }
 
@@ -70,21 +83,21 @@ var Commands = []cli.Command{
 			}
 		},
 	},
-	// {
-	// 	Name:  "migratedb",
-	// 	Usage: "Perform database migrations",
-	// 	Action: func(c *cli.Context) {
-	// 		cfg, err := getConfig(c)
-	// 		if err != nil {
-	// 			log.Fatal(err)
-	// 			return
-	// 		}
+	{
+		Name:  "migratedb",
+		Usage: "Perform database migrations",
+		Action: func(c *cli.Context) {
+			cfg, err := getConfig(c)
+			if err != nil {
+				log.Fatal(err)
+				return
+			}
 
-	// 		svc := service.TodoService{}
+			fmt.Println("\x1b[32;1mYou've created the table 'user'!\x1b[0m")
 
-	// 		if err = svc.Migrate(cfg); err != nil {
-	// 			log.Fatal(err)
-	// 		}
-	// 	},
-	// },
+			if err = Migrate(cfg); err != nil {
+				log.Fatal(err)
+			}
+		},
+	},
 }

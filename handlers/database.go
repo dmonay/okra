@@ -17,22 +17,6 @@ func InitDb(cfg common.Config) (gorm.DB, error) {
 	db, err := gorm.Open("mysql", connection)
 	checkErr(err, "gorm.Open failed")
 
-	// db.CreateTable(&common.User{})
-
-	// // construct a gorp DbMap
-	// UserDb := &gorp.DbMap{Db: db, Dialect: gorp.MySQLDialect{"InnoDB", "UTF8"}}
-
-	// // add a table
-	// UserDb.AddTable(common.User{}).SetKeys(true, "Id")
-
-	// // create the table
-	// err = UserDb.CreateTablesIfNotExists()
-	// checkErr(err, "Create tables failed")
-
-	// test insert
-	// testQuery := &common.User{0, "John", "pwd"}
-	// err = UserDb.Insert(testQuery)
-
 	return db, nil
 }
 

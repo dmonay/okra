@@ -1,9 +1,14 @@
 package authentication
 
 import (
-// "fmt"
+	// "fmt"
+	"net/http"
+	"time"
 )
 
-func main() {
-
+func CreateCookie(w http.ResponseWriter) {
+	expiration := time.Now().Local()
+	cookie := http.Cookie{Name: "username", Value: "astaxie", Expires: expiration}
+	http.SetCookie(w, &cookie)
+	// fmt.Println("cookie: ", cookie)
 }
