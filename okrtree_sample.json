@@ -1,0 +1,52 @@
+{
+    "org_name": "Creationary",
+    "members": {
+        "Alap23": {
+            "role": "employee"
+        },
+        "ItsTejababy": {
+            "role": "employee"
+        },
+        "Ayrab": {
+            "role": "admin"
+        },
+        "D$Swag": {
+            "role": "admin"
+        }
+    },
+    "active": true,
+    "timeframe": "annual",
+    "mission": "get money get paid",
+    "objective1": {
+        "users": [
+            "Ayrab$$$", "ItsTejababy"
+        ],
+        "key_result1": {
+            "users": [
+                "Ayrab$$$", "ItsTejababy"
+            ],
+            "name": "salary > 80K",
+            "body": "make sure you can pay the bills",
+            "status": "in_progress",
+            "priority": "high",
+            "tasks": {
+                "todo1": {
+                    "users": [
+                        "Ayrab$$$"
+                    ],
+                    "name": "network",
+                    "body": "go to 5 meetups",
+                    "status": "in_progress",
+                    "priority": "high"
+                },
+                "todo2": {},
+                "todo3": {},
+                "todo4": {}
+            }
+        }
+    },
+    "objective2": {},
+    "objective3": {},
+    "objective4": {},
+    "objective5": {}
+}

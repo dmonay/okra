@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/codegangsta/cli"
 	"github.com/dmonay/do-work-api/common"
+	// "github.com/dmonay/do-work-api/middleware"
 	"github.com/gin-gonic/gin"
+	// "gopkg.in/mgo.v2"
 	"gopkg.in/yaml.v1"
 	"io/ioutil"
 	"log"
@@ -32,7 +34,7 @@ func getConfig(c *cli.Context) (common.Config, error) {
 func Run(cfg common.Config) error {
 
 	//initialize mysql
-	dbmap, err := InitDb(cfg)
+	dbmap, err := InitSqlDb(cfg)
 	if err != nil {
 		return err
 	}
@@ -40,9 +42,35 @@ func Run(cfg common.Config) error {
 
 	dbmap.SingularTable(true)
 
-	doWorkResource := &DoWorkResource{db: dbmap}
+	// databaseUrl := "localhost:27017"
+	// databseName := "testing"
 
-	r := gin.Default()
+	// initialize mongo
+	mongodb, err := InitMongo()
+	if err != nil {
+		return err
+	}
+
+	// defer mongodb.Close()
+
+	doWorkResource := &DoWorkResource{db: dbmap, mongo: mongodb}
+
+	r := gin.New()
+
+	// r.Use(middleware.DB(*databaseUrl, *databaseName))
+	// r.Use(middleware.DB())
+
+	// session, err := mgo.Dial("localhost:27017")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// defer session.Close()
+	// db := session.DB("testing").C("testData")
+	// err = db.Insert(&Person{"Ale", "+55 53 8116 9639"},
+	// 	&Person{"Cla", "+55 53 8402 8510"})
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	r.POST("/register", doWorkResource.Register)
 	r.POST("/login", doWorkResource.Login)
@@ -55,7 +83,7 @@ func Run(cfg common.Config) error {
 }
 
 func Migrate(cfg common.Config) error {
-	db, err := InitDb(cfg)
+	db, err := InitSqlDb(cfg)
 	if err != nil {
 		return err
 	}

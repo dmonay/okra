@@ -7,6 +7,7 @@ import (
 	// "fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"gopkg.in/mgo.v2"
 )
 
 func (dw *DoWorkResource) Register(c *gin.Context) {
@@ -23,8 +24,16 @@ func (dw *DoWorkResource) Register(c *gin.Context) {
 
 	dw.db.Save(&user)
 
+	dw.mongo.C("testData").Insert(&Person{"Ale", "+55 53 8116 9639"},
+		&Person{"Cla", "+55 53 8402 8510"})
 }
 
 type DoWorkResource struct {
-	db gorm.DB
+	db    gorm.DB
+	mongo *mgo.Database
+}
+
+type Person struct {
+	Name  string
+	Phone string
 }
