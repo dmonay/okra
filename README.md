@@ -1,7 +1,7 @@
-A RESTful Go server to authenticate users and store TODO tasks in a DB
+Okra
 =======================
 
-This service responds to requests to calculate the straight-line distance between two sets of coordinates. 
+# An OKR app to manage and facilitate your company's objectives and key results between team members.
 
 ##Dependencies
 - [gocheck](http://gopkg.in/check.v1)
@@ -11,6 +11,7 @@ This service responds to requests to calculate the straight-line distance betwee
 ## Data Stores
 
 - MySQL
+- MongoDB
 
 ## Installation/Set up
 
