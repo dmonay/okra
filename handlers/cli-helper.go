@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/codegangsta/cli"
 	"github.com/dmonay/do-work-api/common"
-	// "github.com/dmonay/do-work-api/middleware"
 	"github.com/gin-gonic/gin"
 	// "gopkg.in/mgo.v2"
 	"gopkg.in/yaml.v1"
@@ -55,27 +54,15 @@ func Run(cfg common.Config) error {
 
 	doWorkResource := &DoWorkResource{db: dbmap, mongo: mongodb}
 
-	r := gin.New()
-
-	// r.Use(middleware.DB(*databaseUrl, *databaseName))
-	// r.Use(middleware.DB())
-
-	// session, err := mgo.Dial("localhost:27017")
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// defer session.Close()
-	// db := session.DB("testing").C("testData")
-	// err = db.Insert(&Person{"Ale", "+55 53 8116 9639"},
-	// 	&Person{"Cla", "+55 53 8402 8510"})
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	r := gin.Default()
 
 	r.POST("/register", doWorkResource.Register)
 	r.POST("/login", doWorkResource.Login)
-	// r.POST("/logout", handlers.Logout)
-	r.POST("/create", doWorkResource.Create)
+	// // r.POST("/logout", handlers.Logout)
+	r.POST("/create/organization", doWorkResource.CreateOrg)
+	r.POST("/update/mission/:organization", doWorkResource.UpdateMission)
+
+	r.POST("/create/tree/:organization", doWorkResource.CreateTree)
 
 	r.Run(cfg.SvcHost)
 
