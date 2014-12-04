@@ -58,11 +58,12 @@ func Run(cfg common.Config) error {
 
 	r.POST("/register", doWorkResource.Register)
 	r.POST("/login", doWorkResource.Login)
-	// // r.POST("/logout", handlers.Logout)
+	// r.POST("/logout", handlers.Logout)
 	r.POST("/create/organization", doWorkResource.CreateOrg)
-	r.POST("/update/mission/:organization", doWorkResource.UpdateMission)
-
 	r.POST("/create/tree/:organization", doWorkResource.CreateTree)
+	r.POST("/update/mission/:organization", doWorkResource.UpdateMission)
+	r.POST("/update/members/:organization", doWorkResource.UpdateMembers)
+	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
 
 	r.Run(cfg.SvcHost)
 

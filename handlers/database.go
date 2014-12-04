@@ -16,12 +16,12 @@ func InitSqlDb(cfg common.Config) (gorm.DB, error) {
 
 	// connect to db
 	db, err := gorm.Open("mysql", connection)
-	checkErr(err, "gorm.Open failed")
+	CheckErr(err, "gorm.Open failed")
 
 	return db, nil
 }
 
-func checkErr(err error, msg string) {
+func CheckErr(err error, msg string) {
 	if err != nil {
 		log.Fatalln(msg, err)
 	}
@@ -29,10 +29,10 @@ func checkErr(err error, msg string) {
 
 func InitMongo() (*mgo.Database, error) {
 	session, err := mgo.Dial("localhost:27017")
-	checkErr(err, "mongo connection failed")
+	CheckErr(err, "mongo connection failed")
 
 	db := session.DB("testing")
-	checkErr(err, "mongo opening database failed")
+	CheckErr(err, "mongo opening database failed")
 
 	return db, nil
 }

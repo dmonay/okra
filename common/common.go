@@ -33,3 +33,15 @@ type OrganizationJson struct {
 type TreeJson struct {
 	Timeframe string `json:"timeframe"`
 }
+
+type MembersJson struct {
+	Members map[string]map[string]string `json:"members"`
+}
+
+type ObjectiveJson struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+	Body string `json:"body"`
+	// Active bool   `json:"active"`
+	Members map[string]map[string]string `json:"members"`
+}
