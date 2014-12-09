@@ -1,12 +1,16 @@
 Okra
 =======================
 
-# An OKR app to manage and facilitate your company's objectives and key results between team members.
+An OKR app to manage and facilitate your company's objectives and key results between team members.
 
 ##Dependencies
-- [gocheck](http://gopkg.in/check.v1)
+- [gin](github.com/gin-gonic/gin)
 - [Go-MySQL-Driver](https://github.com/go-sql-driver/mysql)
-- [gorp](https://github.com/coopernurse/gorp)
+- [gorm](github.com/jinzhu/gorm)
+- [mgo](gopkg.in/mgo.v2)
+- [mgo/bson](gopkg.in/mgo.v2/bson)
+- [yaml](gopkg.in/yaml.v1)
+- [cli](github.com/codegangsta/cli)
 
 ## Data Stores
 
@@ -15,10 +19,12 @@ Okra
 
 ## Installation/Set up
 
-In your project directory, you can run
+1. Install MySql and MongoDB.
+
+2. In your project directory, you can run
 
 ``` go
-go get github.com/dmonay/worth_my_salt
+go get github.com/dmonay/do-work-api
 ```
 
 
@@ -38,12 +44,24 @@ To run benchmarks, run
 go test -check.b
 ```
 
-
+NOTE: no tests as of yet. To be added. 
 ## Documentation
 
-### Getting distance
+1. Migrate the db. Run:
 
-    POST /distance
+```go 
+go run server.go migratedb
+```
+
+2. Start the server. Run: 
+
+```go 
+go run server.go server
+```
+
+### Create your organization
+
+    POST /create/organization
     
 
 **Sample Request Body**
@@ -51,21 +69,65 @@ go test -check.b
 
 ```json
 {
-"lat1":"39.768434", 
-"lon1":"-104.901872", 
-"lat2":"44.7793732", 
-"lon2":"-69.6734886", 
-"unit":"km"
+"organization":"DopeStartup"
 }
 ```
 
-
-*NOTE*: Units MUST be one of "mi", "miles", "km", or "kilometers".
 
 **Sample Response Body**
 
 ```json
 {
-   "Success":"You have 2927.7229366372153 km to travel."
+   "You have successfully created an organization"
 }
 ```
+
+
+### Add an OKR tree to the organization
+
+    POST /create/tree/:organization
+    
+
+**Sample Request Body**
+
+*NOTE*: Must pass in a parameter for the timeframe. One of "annual" or "monthly".
+
+```json
+{
+"timeframe":"weekly"
+}
+```
+
+
+**Sample Response Body**
+
+```json
+{
+   "You have successfully created a tree with the annual timeframe for the DopeStartup organization"
+}
+```
+
+### Add or update mission in your tree
+
+    POST /update/mission/:organization
+    
+
+**Sample Request Body**
+
+*NOTE*: Must pass in a parameter for the mission.
+
+```json
+{
+"mission":"To thrive amidst enemies"
+}
+```
+
+
+**Sample Response Body**
+
+```json
+{
+   "You have successfully added a mission"
+}
+```
+ 	

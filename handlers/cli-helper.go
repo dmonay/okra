@@ -34,9 +34,7 @@ func Run(cfg common.Config) error {
 
 	//initialize mysql
 	dbmap, err := InitSqlDb(cfg)
-	if err != nil {
-		return err
-	}
+	CheckErr(err, "MySQL failed to initialize")
 	// defer dbmap.Db.Close()
 
 	dbmap.SingularTable(true)
@@ -46,9 +44,7 @@ func Run(cfg common.Config) error {
 
 	// initialize mongo
 	mongodb, err := InitMongo()
-	if err != nil {
-		return err
-	}
+	CheckErr(err, "MongoDB failed to initialize")
 
 	// defer mongodb.Close()
 
@@ -64,6 +60,7 @@ func Run(cfg common.Config) error {
 	r.POST("/update/mission/:organization", doWorkResource.UpdateMission)
 	r.POST("/update/members/:organization", doWorkResource.UpdateMembers)
 	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
+	r.POST("/create/objective/:organization/:objective", doWorkResource.CreateKeyResult)
 
 	r.Run(cfg.SvcHost)
 
@@ -72,9 +69,8 @@ func Run(cfg common.Config) error {
 
 func Migrate(cfg common.Config) error {
 	db, err := InitSqlDb(cfg)
-	if err != nil {
-		return err
-	}
+	CheckErr(err, "MySQL failed to initialize")
+
 	db.SingularTable(true)
 
 	db.CreateTable(&common.User{})

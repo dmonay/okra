@@ -109,9 +109,29 @@ func (dw *DoWorkResource) UpdateObjective(c *gin.Context) {
 	err := dw.mongo.C(org).Update(colQuerier, addObjective)
 	CheckErr(err, "Mongo failed to add objective")
 
+	c.JSON(201, "You have successfully added an objective to the "+org+" organization")
+}
+
+func (dw *DoWorkResource) CreateKeyResult(c *gin.Context) {
+
+	org := c.Params.ByName("organization")
+	obj := c.Params.ByName("objective")
+	var reqBody common.KeyResultJson
+
+	c.Bind(&reqBody)
+
+	id := reqBody.Id
+	// body := reqBody.Body
+	// members := reqBody.Members
+
+	colQuerier := bson.M{"orgname": org}
+	addObjective := bson.M{"$set": bson.M{obj: {id: reqBody}}}
+	err := dw.mongo.C(org).Update(colQuerier, addObjective)
+	CheckErr(err, "Mongo failed to add key result")
+
 	fmt.Println(reqBody)
 
-	c.JSON(201, "You have successfully added an objective to the "+org+" organization")
+	c.JSON(201, "You have successfully added a key result")
 }
 
 type OkrTree struct {

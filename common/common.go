@@ -39,9 +39,18 @@ type MembersJson struct {
 }
 
 type ObjectiveJson struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-	Body string `json:"body"`
-	// Active bool   `json:"active"`
+	Id      string                       `json:"id"`
+	Name    string                       `json:"name"`
+	Body    string                       `json:"body"`
+	Active  bool                         `json:"active"`
 	Members map[string]map[string]string `json:"members"`
+}
+
+type KeyResultJson struct {
+	Id       string                       `json:"id"`
+	Members  map[string]map[string]string `json:"members"`
+	Name     string                       `json:"name"`
+	Body     string                       `json:"body"`
+	Active   bool                         `json:"active"`
+	Priority string                       `json:"priority"`
 }
