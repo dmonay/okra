@@ -24,11 +24,14 @@ An OKR app to manage and facilitate your company's objectives and key results be
 2. In your project directory, you can run
 
 ``` go
-go get github.com/dmonay/do-work-api
+go get github.com/dmonay/okra
 ```
 
 
 ## Tests and Benchmarks
+
+
+NOTE: no tests as of yet. To be added. 
 
 To run tests, run 
 
@@ -44,16 +47,15 @@ To run benchmarks, run
 go test -check.b
 ```
 
-NOTE: no tests as of yet. To be added. 
 ## Documentation
 
-1. Migrate the db. Run:
+1. Migrate the db:
 
 ```go 
 go run server.go migratedb
 ```
 
-2. Start the server. Run: 
+2. Start the server: 
 
 ```go 
 go run server.go server
@@ -66,6 +68,7 @@ go run server.go server
 
 **Sample Request Body**
 
+*NOTE*: Must pass in a parameter for the organization.
 
 ```json
 {
