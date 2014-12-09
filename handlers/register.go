@@ -2,7 +2,7 @@ package handlers
 
 import (
 	// "fmt"
-	"github.com/dmonay/do-work-api/common"
+	"github.com/dmonay/okra/common"
 	// "github.com/dmonay/do-work-api/database"
 	// "fmt"
 	"github.com/gin-gonic/gin"

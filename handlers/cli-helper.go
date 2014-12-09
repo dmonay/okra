@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/codegangsta/cli"
-	"github.com/dmonay/do-work-api/common"
+	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
 	// "gopkg.in/mgo.v2"
 	"gopkg.in/yaml.v1"

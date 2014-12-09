@@ -2,8 +2,8 @@ package handlers
 
 import (
 	// "fmt"
-	"github.com/dmonay/do-work-api/authentication"
-	"github.com/dmonay/do-work-api/common"
+	"github.com/dmonay/okra/authentication"
+	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
 	// "net/http"
 )

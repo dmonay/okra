@@ -4,7 +4,7 @@ import (
 	// "fmt"
 
 	"github.com/codegangsta/cli"
-	"github.com/dmonay/do-work-api/handlers"
+	"github.com/dmonay/okra/handlers"
 	"os"
 )
 
