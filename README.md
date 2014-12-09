@@ -3,6 +3,8 @@ Okra
 
 An OKR app to manage and facilitate your company's objectives and key results between team members.
 
+![](okra.png)
+
 ##Dependencies
 - [gin](github.com/gin-gonic/gin)
 - [Go-MySQL-Driver](https://github.com/go-sql-driver/mysql)
@@ -31,7 +33,7 @@ go get github.com/dmonay/okra
 ## Tests and Benchmarks
 
 
-NOTE: no tests as of yet. To be added. 
+*NOTE*: no tests as of yet. To be added. 
 
 To run tests, run 
 

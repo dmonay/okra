@@ -121,16 +121,12 @@ func (dw *DoWorkResource) CreateKeyResult(c *gin.Context) {
 	c.Bind(&reqBody)
 
 	id := reqBody.Id
-	// body := reqBody.Body
-	// members := reqBody.Members
-	name := obj + "." + id
+	resultName := obj + "." + id
 
-	colQuerier := bson.M{"orgname": org}
+	colQuerier := bson.M{"orgresultName": org}
 	addKeyResult := bson.M{"$set": bson.M{name: reqBody}}
 	err := dw.mongo.C(org).Update(colQuerier, addKeyResult)
 	CheckErr(err, "Mongo failed to add key result")
-
-	fmt.Println(reqBody)
 
 	c.JSON(201, "You have successfully added a key result")
 }
