@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
@@ -124,7 +123,7 @@ func (dw *DoWorkResource) CreateKeyResult(c *gin.Context) {
 	resultName := obj + "." + id
 
 	colQuerier := bson.M{"orgresultName": org}
-	addKeyResult := bson.M{"$set": bson.M{name: reqBody}}
+	addKeyResult := bson.M{"$set": bson.M{resultName: reqBody}}
 	err := dw.mongo.C(org).Update(colQuerier, addKeyResult)
 	CheckErr(err, "Mongo failed to add key result")
 
