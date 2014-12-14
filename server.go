@@ -11,8 +11,8 @@ import (
 func main() {
 
 	app := cli.NewApp()
-	app.Name = "Do-Work"
-	app.Usage = "Personal JIRA board"
+	app.Name = "Okra"
+	app.Usage = "An OKR manager"
 	app.Version = "0.0.1"
 
 	app.Flags = []cli.Flag{

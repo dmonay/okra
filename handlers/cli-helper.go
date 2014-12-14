@@ -89,6 +89,7 @@ var Commands = []cli.Command{
 				log.Fatal(err)
 				return
 			}
+			fmt.Println("\x1b[32;1mYou've started the server. Rejoice!\x1b[0m")
 
 			if err = Run(cfg); err != nil {
 				log.Fatal(err)
