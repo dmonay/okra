@@ -13,6 +13,7 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	c.Bind(&reqBody)
 
 	org := reqBody.Organization
+	id := reqBody.UserId
 	err := dw.mongo.C(org).Insert(&OkrTree{
 		org,
 		"",
@@ -28,6 +29,12 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	CheckErr(err, "Mongo failed to create collection for "+org+" organization")
 
 	c.JSON(201, "You have successfully created an organization")
+
+	// add organization to user's document in Users
+	colQuerier := bson.M{"_id": id}
+	updateTimeframe := bson.M{"$set": bson.M{"orgs": timeframe}}
+	err2 := dw.mongo.C("Users").Update(colQuerier, updateTimeframe)
+	CheckErr(err2, "Mongo failed to add organization to user's document")
 }
 
 func (dw *DoWorkResource) CreateTree(c *gin.Context) {

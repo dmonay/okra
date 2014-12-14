@@ -33,11 +33,11 @@ func getConfig(c *cli.Context) (common.Config, error) {
 func Run(cfg common.Config) error {
 
 	//initialize mysql
-	dbmap, err := InitSqlDb(cfg)
-	CheckErr(err, "MySQL failed to initialize")
+	// dbmap, err := InitSqlDb(cfg)
+	// CheckErr(err, "MySQL failed to initialize")
 	// defer dbmap.Db.Close()
 
-	dbmap.SingularTable(true)
+	// dbmap.SingularTable(true)
 
 	// databaseUrl := "localhost:27017"
 	// databseName := "testing"
@@ -48,7 +48,7 @@ func Run(cfg common.Config) error {
 
 	// defer mongodb.Close()
 
-	doWorkResource := &DoWorkResource{db: dbmap, mongo: mongodb}
+	doWorkResource := &DoWorkResource{mongo: mongodb}
 
 	r := gin.Default()
 
@@ -61,6 +61,8 @@ func Run(cfg common.Config) error {
 	r.POST("/update/members/:organization", doWorkResource.UpdateMembers)
 	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
 	r.POST("/create/objective/:organization/:objective", doWorkResource.CreateKeyResult)
+
+	// r.POST("/get/trees/", doWorkResource.CreateKeyResult)
 
 	r.Run(cfg.SvcHost)
 

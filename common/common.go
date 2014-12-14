@@ -17,9 +17,8 @@ type Config struct {
 	DbName     string
 }
 
-type Credentials struct {
+type UserJson struct {
 	Username string `json:"username"`
-	Password string `json:"password"`
 }
 
 type MissionJson struct {
@@ -28,6 +27,7 @@ type MissionJson struct {
 
 type OrganizationJson struct {
 	Organization string `json:"organization"`
+	UserId       string `json:"userId"`
 }
 
 type TreeJson struct {
@@ -35,7 +35,13 @@ type TreeJson struct {
 }
 
 type MembersJson struct {
-	Members map[string]map[string]string `json:"members"`
+	Members []Member `json:"members"`
+}
+
+type Member struct {
+	Username string `json:"userName"`
+	UserId   string `json:"userId"`
+	Role     string `json:"role"`
 }
 
 type ObjectiveJson struct {
