@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	// "fmt"
+	"fmt"
 	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
-	"gopkg.in/mgo.v2"
+	// "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -17,25 +17,31 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	org := reqBody.Organization
 	objId := bson.ObjectIdHex(reqBody.UserId)
 
-	// c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3333")
-	c.JSON(201, "You have successfully created an organization")
+	// 1. Create collection with members document
+	memArray := []string{}
+	membersDoc := &OrgMembers{memArray, "membersArray"}
+	err2 := dw.mongo.C(org).Insert(membersDoc)
+	CheckErr(err2, "Mongo failed to create collection with the empty members array")
 
-	// add organization to user's document in Users
+	// 2. Add organization to user's document in Users
 	colQuerier := bson.M{"_id": objId}
 	updateTimeframe := bson.M{"$push": bson.M{"orgs": org}}
 	err := dw.mongo.C("Users").Update(colQuerier, updateTimeframe)
 	CheckErr(err, "Mongo failed to add orgnization to user's document in Users")
 
-	// max size of 10 trees
-	colInfo := mgo.CollectionInfo{false, false, false, 5242880, 10}
-	err2 := dw.mongo.C(org).Create(&colInfo)
-	CheckErr(err2, "Mongo failed to create collection")
+	// c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3333")
+	c.JSON(201, "You have successfully created an organization")
 }
 
-func (dw *DoWorkResource) CreateOrgOpts(c *gin.Context) {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3333")
-	c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+type OrgMembers struct {
+	Members []string `bson:"members"`
+	Name    string   `bson:"name"`
 }
+
+// func (dw *DoWorkResource) CreateOrgOpts(c *gin.Context) {
+// 	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3333")
+// 	c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+// }
 
 func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 
@@ -46,12 +52,13 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 	timeframe := reqBody.Timeframe
 	treeName := reqBody.TreeName
 	objId := bson.ObjectIdHex(reqBody.UserId)
+	members := []string{}
 
-	// 1. create tree
+	// 1. Create tree and upsert it into the org collection
 	treeStruct := &OkrTree{
 		org,
 		"",
-		"",
+		members,
 		true,
 		timeframe,
 		treeName,
@@ -94,21 +101,42 @@ func (dw *DoWorkResource) UpdateMission(c *gin.Context) {
 	c.JSON(201, "You have successfully added a mission")
 }
 
-func (dw *DoWorkResource) UpdateMembers(c *gin.Context) {
-
+func (dw *DoWorkResource) AddMembers(c *gin.Context) {
 	org := c.Params.ByName("organization")
 	var reqBody common.MembersJson
-
 	c.Bind(&reqBody)
 
-	members := reqBody.Members
+	// update tree's members array if tree ID provided
+	if reqBody.UpdateTree {
 
-	colQuerier := bson.M{"orgname": org}
-	addMembers := bson.M{"$set": bson.M{"members": members}}
-	err := dw.mongo.C(org).Update(colQuerier, addMembers)
-	CheckErr(err, "Mongo failed to add members to "+org+" organization")
+		fmt.Println("true? ", reqBody)
+		id := bson.ObjectIdHex(reqBody.Tree)
 
-	c.JSON(201, "You have successfully added members to the "+org+" organization")
+		colQuerier := bson.M{"_id": id}
+		for _, value := range reqBody.Members {
+			addMembers := bson.M{"$push": bson.M{"members": value}}
+			err := dw.mongo.C(org).Update(colQuerier, addMembers)
+			CheckErr(err, "Mongo failed to add members to "+org+" organization")
+		}
+
+		c.JSON(201, "You have successfully added members to the tree")
+
+		// otherwise update org's members array
+	} else {
+		colQuerier := bson.M{"name": "membersArray"}
+		for _, value := range reqBody.Members {
+			addMembers := bson.M{"$push": bson.M{"members": value}}
+			err := dw.mongo.C(org).Update(colQuerier, addMembers)
+			CheckErr(err, "Mongo failed to add members to "+org+" organization")
+			c.JSON(201, "You have successfully added members to the "+org+" organization")
+		}
+	}
+}
+
+func (dw *DoWorkResource) DeleteMembers(c *gin.Context) {
+	// if treeId passed in - do this for tree, if not, for org
+	// 1. Find tree by tree ID
+	// 2. push members objects into the array
 }
 
 func (dw *DoWorkResource) UpdateObjective(c *gin.Context) {
@@ -152,7 +180,7 @@ func (dw *DoWorkResource) CreateKeyResult(c *gin.Context) {
 type OkrTree struct {
 	OrgName    string
 	Mission    string
-	Members    string
+	Members    []string
 	Active     bool
 	Timeframe  string
 	TreeName   string

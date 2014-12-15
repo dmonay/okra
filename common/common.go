@@ -33,7 +33,9 @@ type TreeJson struct {
 }
 
 type MembersJson struct {
-	Members []Member `json:"members"`
+	UpdateTree bool     `json:"updateTree,omitempty"`
+	Tree       string   `json:"tree,omitempty"`
+	Members    []Member `json:"members"`
 }
 
 type Member struct {

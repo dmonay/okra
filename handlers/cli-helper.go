@@ -48,7 +48,8 @@ func Run(cfg common.Config) error {
 	// r.OPTIONS("/create/organization", doWorkResource.CreateOrgOpts)
 	r.POST("/create/tree/:organization", doWorkResource.CreateTree)
 	r.POST("/update/mission/:organization", doWorkResource.UpdateMission)
-	r.POST("/update/members/:organization", doWorkResource.UpdateMembers)
+	r.POST("/update/members/:organization", doWorkResource.AddMembers)
+	r.DELETE("/update/members/:organization", doWorkResource.DeleteMembers)
 	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
 	r.POST("/create/objective/:organization/:objective", doWorkResource.CreateKeyResult)
 
