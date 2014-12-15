@@ -44,6 +44,11 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	CheckErr(err2, "Mongo failed to add organization to user's document")
 }
 
+func (dw *DoWorkResource) CreateOrgOpts(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+}
+
 func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 
 	// not actually creating a tree, as that was created in CreateOrg.
