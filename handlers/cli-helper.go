@@ -32,20 +32,9 @@ func getConfig(c *cli.Context) (common.Config, error) {
 
 func Run(cfg common.Config) error {
 
-	//initialize mysql
-	// dbmap, err := InitSqlDb(cfg)
-	// CheckErr(err, "MySQL failed to initialize")
-	// defer dbmap.Db.Close()
-
-	// dbmap.SingularTable(true)
-
-	// databaseUrl := "localhost:27017"
-	// databseName := "testing"
-
 	// initialize mongo
 	mongodb, err := InitMongo()
 	CheckErr(err, "MongoDB failed to initialize")
-
 	// defer mongodb.Close()
 
 	doWorkResource := &DoWorkResource{mongo: mongodb}
@@ -63,24 +52,24 @@ func Run(cfg common.Config) error {
 	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
 	r.POST("/create/objective/:organization/:objective", doWorkResource.CreateKeyResult)
 
-	// r.POST("/get/trees/", doWorkResource.CreateKeyResult)
+	// r.POST("/get/trees/", doWorkResource.GetTrees)
 
 	r.Run(cfg.SvcHost)
 
 	return nil
 }
 
-func Migrate(cfg common.Config) error {
-	db, err := InitSqlDb(cfg)
-	CheckErr(err, "MySQL failed to initialize")
+// func Migrate(cfg common.Config) error {
+// 	db, err := InitSqlDb(cfg)
+// 	CheckErr(err, "MySQL failed to initialize")
 
-	db.SingularTable(true)
+// 	db.SingularTable(true)
 
-	db.CreateTable(&common.User{})
+// 	db.CreateTable(&common.User{})
 
-	db.AutoMigrate(common.User{})
-	return nil
-}
+// 	db.AutoMigrate(common.User{})
+// 	return nil
+// }
 
 var Commands = []cli.Command{
 	{
@@ -99,21 +88,21 @@ var Commands = []cli.Command{
 			}
 		},
 	},
-	{
-		Name:  "migratedb",
-		Usage: "Perform database migrations",
-		Action: func(c *cli.Context) {
-			cfg, err := getConfig(c)
-			if err != nil {
-				log.Fatal(err)
-				return
-			}
+	// {
+	// 	Name:  "migratedb",
+	// 	Usage: "Perform database migrations",
+	// 	Action: func(c *cli.Context) {
+	// 		cfg, err := getConfig(c)
+	// 		if err != nil {
+	// 			log.Fatal(err)
+	// 			return
+	// 		}
 
-			fmt.Println("\x1b[32;1mYou've created the table 'user'!\x1b[0m")
+	// 		fmt.Println("\x1b[32;1mYou've created the table 'user'!\x1b[0m")
 
-			if err = Migrate(cfg); err != nil {
-				log.Fatal(err)
-			}
-		},
-	},
+	// 		if err = Migrate(cfg); err != nil {
+	// 			log.Fatal(err)
+	// 		}
+	// 	},
+	// },
 }

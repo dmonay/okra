@@ -30,22 +30,21 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	})
 	CheckErr(err, "Mongo failed to create collection for "+org+" organization")
 
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3333")
 	c.JSON(201, "You have successfully created an organization")
 
 	// add organization to user's document in Users
 	i := bson.NewObjectId()
 	userOrg := common.UserOrgs{org, i}
-	arrOfOrgs := []common.UserOrgs{userOrg}
 
 	colQuerier := bson.M{"_id": objId}
-	updateTimeframe := bson.M{"$set": bson.M{"orgs": arrOfOrgs}}
+	updateTimeframe := bson.M{"$push": bson.M{"orgs": userOrg}}
 	err2 := dw.mongo.C("Users").Update(colQuerier, updateTimeframe)
 	CheckErr(err2, "Mongo failed to add organization to user's document")
 }
 
 func (dw *DoWorkResource) CreateOrgOpts(c *gin.Context) {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3333")
 	c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 }
 

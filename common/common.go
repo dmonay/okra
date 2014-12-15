@@ -4,11 +4,11 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type User struct {
-	Id       int64
-	Username string
-	Password string
-}
+// type User struct {
+// 	Id       int64
+// 	Username string
+// 	Password string
+// }
 
 type Config struct {
 	SvcHost    string
@@ -18,7 +18,8 @@ type Config struct {
 }
 
 type UserJson struct {
-	Username string `json:"username"`
+	Username string   `json:"username"`
+	Orgs     []string `bson:"orgs" omitempty`
 }
 
 type MissionJson struct {
@@ -59,10 +60,6 @@ type KeyResultJson struct {
 	Body     string                       `json:"body"`
 	Active   bool                         `json:"active"`
 	Priority string                       `json:"priority"`
-}
-
-type UserOrganizations struct {
-	UserOrg []UserOrgs
 }
 
 type UserOrgs struct {
