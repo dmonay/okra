@@ -15,10 +15,11 @@ func (dw *DoWorkResource) Register(c *gin.Context) {
 
 	uname := user.Username
 	orgs := []string{}
+	trees := []string{}
 
 	c.JSON(201, "You have registered, "+uname)
 
-	err := dw.mongo.C("Users").Insert(&common.UserJson{uname, orgs})
+	err := dw.mongo.C("Users").Insert(&common.UserJson{uname, orgs, trees})
 	CheckErr(err, "User not added to Users collection")
 }
 

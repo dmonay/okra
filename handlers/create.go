@@ -4,6 +4,7 @@ import (
 	// "fmt"
 	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -16,31 +17,19 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	org := reqBody.Organization
 	objId := bson.ObjectIdHex(reqBody.UserId)
 
-	err := dw.mongo.C(org).Insert(&OkrTree{
-		org,
-		"",
-		"",
-		false,
-		"",
-		Objective{""},
-		Objective{""},
-		Objective{""},
-		Objective{""},
-		Objective{""},
-	})
-	CheckErr(err, "Mongo failed to create collection for "+org+" organization")
-
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3333")
+	// c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3333")
 	c.JSON(201, "You have successfully created an organization")
 
 	// add organization to user's document in Users
-	i := bson.NewObjectId()
-	userOrg := common.UserOrgs{org, i}
-
 	colQuerier := bson.M{"_id": objId}
-	updateTimeframe := bson.M{"$push": bson.M{"orgs": userOrg}}
-	err2 := dw.mongo.C("Users").Update(colQuerier, updateTimeframe)
-	CheckErr(err2, "Mongo failed to add organization to user's document")
+	updateTimeframe := bson.M{"$push": bson.M{"orgs": org}}
+	err := dw.mongo.C("Users").Update(colQuerier, updateTimeframe)
+	CheckErr(err, "Mongo failed to add orgnization to user's document in Users")
+
+	// max size of 10 trees
+	colInfo := mgo.CollectionInfo{false, false, false, 5242880, 10}
+	err2 := dw.mongo.C(org).Create(&colInfo)
+	CheckErr(err2, "Mongo failed to create collection")
 }
 
 func (dw *DoWorkResource) CreateOrgOpts(c *gin.Context) {
@@ -50,28 +39,40 @@ func (dw *DoWorkResource) CreateOrgOpts(c *gin.Context) {
 
 func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 
-	// not actually creating a tree, as that was created in CreateOrg.
-	// Simply updating the 'timeframe' and 'active' fields
-
-	org := c.Params.ByName("organization")
 	var reqBody common.TreeJson
-
 	c.Bind(&reqBody)
 
+	org := c.Params.ByName("organization")
 	timeframe := reqBody.Timeframe
+	treeName := reqBody.TreeName
+	objId := bson.ObjectIdHex(reqBody.UserId)
 
-	colQuerier := bson.M{"orgname": org}
+	// 1. create tree
+	treeStruct := &OkrTree{
+		org,
+		"",
+		"",
+		true,
+		timeframe,
+		treeName,
+		Objective{""},
+		Objective{""},
+		Objective{""},
+		Objective{""},
+		Objective{""},
+	}
+	colQuerier := bson.M{"treename": treeName}
+	upsertTree := bson.M{"$set": treeStruct}
+	info, err := dw.mongo.C(org).Upsert(colQuerier, upsertTree)
+	CheckErr(err, "Mongo failed to create collection for "+org+" organization")
 
-	// 1. update the timeframe of the tree
-	updateTimeframe := bson.M{"$set": bson.M{"timeframe": timeframe}}
-	err := dw.mongo.C(org).Update(colQuerier, updateTimeframe)
-	CheckErr(err, "Mongo failed to update timeframe")
-
-	// 2. set status to true
-	updateStatus := bson.M{"$set": bson.M{"active": true}}
-
-	err2 := dw.mongo.C(org).Update(colQuerier, updateStatus)
-	CheckErr(err2, "Mongo failed to set 'active' status to true")
+	// 2. Update user's doc in Users with the ObjId and name of the tree
+	treeId := info.UpsertedId.(bson.ObjectId)
+	tree := common.UserTree{treeName, treeId}
+	colQuerier2 := bson.M{"_id": objId}
+	updateTimeframe := bson.M{"$push": bson.M{"trees": tree}}
+	err2 := dw.mongo.C("Users").Update(colQuerier2, updateTimeframe)
+	CheckErr(err2, "Mongo failed to add tree to user's document in Users")
 
 	c.JSON(201, "You have successfully created a tree with the "+timeframe+" timeframe for the "+org+" organization")
 }
@@ -154,6 +155,7 @@ type OkrTree struct {
 	Members    string
 	Active     bool
 	Timeframe  string
+	TreeName   string
 	Objective1 Objective
 	Objective2 Objective
 	Objective3 Objective

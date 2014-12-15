@@ -2,13 +2,7 @@
     "username": "john234",
     "_id": "231093875", // mongo-generated
     "auth_token": "4343fsdf3" // auth stuff
-    "orgs": [{
-        "orgname": "dopestartup",
-        "orgId": "523450934vdge8gdf9g8df0g"
-    }, {
-        "orgname": "pedrostartup",
-        "orgId": "fsdfsfsdfdsf8ds09f"
-    }],
+    "orgs": ["dopestartup", "pedrostartup"],
     "trees": [{
         "treeName": "dopestartup",
         "treeId": "523450934vdge8gdf9g8df0g"

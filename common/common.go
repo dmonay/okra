@@ -4,12 +4,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// type User struct {
-// 	Id       int64
-// 	Username string
-// 	Password string
-// }
-
 type Config struct {
 	SvcHost    string
 	DbUser     string
@@ -20,6 +14,7 @@ type Config struct {
 type UserJson struct {
 	Username string   `json:"username"`
 	Orgs     []string `bson:"orgs" omitempty`
+	Trees    []string `bson:"trees" omitempty`
 }
 
 type MissionJson struct {
@@ -32,7 +27,9 @@ type OrganizationJson struct {
 }
 
 type TreeJson struct {
+	TreeName  string `json:"treeName"`
 	Timeframe string `json:"timeframe"`
+	UserId    string `json:"userId" bson:"_id,omitempty"`
 }
 
 type MembersJson struct {
@@ -64,5 +61,9 @@ type KeyResultJson struct {
 
 type UserOrgs struct {
 	OrgName string
-	OrgId   bson.ObjectId
+}
+
+type UserTree struct {
+	TreeName string
+	TreeId   bson.ObjectId
 }
