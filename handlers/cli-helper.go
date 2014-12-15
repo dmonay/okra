@@ -59,18 +59,6 @@ func Run(cfg common.Config) error {
 	return nil
 }
 
-// func Migrate(cfg common.Config) error {
-// 	db, err := InitSqlDb(cfg)
-// 	CheckErr(err, "MySQL failed to initialize")
-
-// 	db.SingularTable(true)
-
-// 	db.CreateTable(&common.User{})
-
-// 	db.AutoMigrate(common.User{})
-// 	return nil
-// }
-
 var Commands = []cli.Command{
 	{
 		Name:  "server",
@@ -88,21 +76,4 @@ var Commands = []cli.Command{
 			}
 		},
 	},
-	// {
-	// 	Name:  "migratedb",
-	// 	Usage: "Perform database migrations",
-	// 	Action: func(c *cli.Context) {
-	// 		cfg, err := getConfig(c)
-	// 		if err != nil {
-	// 			log.Fatal(err)
-	// 			return
-	// 		}
-
-	// 		fmt.Println("\x1b[32;1mYou've created the table 'user'!\x1b[0m")
-
-	// 		if err = Migrate(cfg); err != nil {
-	// 			log.Fatal(err)
-	// 		}
-	// 	},
-	// },
 }
