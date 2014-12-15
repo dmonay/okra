@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	// "fmt"
 	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
@@ -13,7 +14,8 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	c.Bind(&reqBody)
 
 	org := reqBody.Organization
-	id := reqBody.UserId
+	objId := bson.ObjectIdHex(reqBody.UserId)
+
 	err := dw.mongo.C(org).Insert(&OkrTree{
 		org,
 		"",
@@ -28,11 +30,16 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	})
 	CheckErr(err, "Mongo failed to create collection for "+org+" organization")
 
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.JSON(201, "You have successfully created an organization")
 
 	// add organization to user's document in Users
-	colQuerier := bson.M{"_id": id}
-	updateTimeframe := bson.M{"$set": bson.M{"orgs": timeframe}}
+	i := bson.NewObjectId()
+	userOrg := common.UserOrgs{org, i}
+	arrOfOrgs := []common.UserOrgs{userOrg}
+
+	colQuerier := bson.M{"_id": objId}
+	updateTimeframe := bson.M{"$set": bson.M{"orgs": arrOfOrgs}}
 	err2 := dw.mongo.C("Users").Update(colQuerier, updateTimeframe)
 	CheckErr(err2, "Mongo failed to add organization to user's document")
 }

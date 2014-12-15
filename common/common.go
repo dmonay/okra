@@ -1,7 +1,7 @@
 package common
 
 import (
-// "github.com/coopernurse/gorp"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type User struct {
@@ -27,7 +27,7 @@ type MissionJson struct {
 
 type OrganizationJson struct {
 	Organization string `json:"organization"`
-	UserId       string `json:"userId"`
+	UserId       string `json:"userId" bson:"_id,omitempty"`
 }
 
 type TreeJson struct {
@@ -59,4 +59,13 @@ type KeyResultJson struct {
 	Body     string                       `json:"body"`
 	Active   bool                         `json:"active"`
 	Priority string                       `json:"priority"`
+}
+
+type UserOrganizations struct {
+	UserOrg []UserOrgs
+}
+
+type UserOrgs struct {
+	OrgName string
+	OrgId   bson.ObjectId
 }
