@@ -108,13 +108,21 @@ func (dw *DoWorkResource) AddMembers(c *gin.Context) {
 
 	// update tree's members array if tree ID provided
 	if reqBody.UpdateTree {
-		id := bson.ObjectIdHex(reqBody.Tree)
+		treeId := bson.ObjectIdHex(reqBody.TreeId)
 
-		colQuerier := bson.M{"_id": id}
+		colQuerier := bson.M{"_id": treeId}
 		for _, value := range reqBody.Members {
 			addMembers := bson.M{"$push": bson.M{"members": value}}
 			err := dw.mongo.C(org).Update(colQuerier, addMembers)
 			CheckErr(err, "Mongo failed to add members to the provided tree")
+
+			// Update user's doc in Users with the ObjId and name of the tree
+			memberId := bson.ObjectIdHex(value.UserId)
+			tree := common.UserTree{reqBody.TreeName, treeId}
+			colQuerier2 := bson.M{"_id": memberId}
+			updateUsersDoc := bson.M{"$push": bson.M{"trees": tree}}
+			err2 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
+			CheckErr(err2, "Mongo failed to add tree to user's document in Users")
 		}
 
 		c.JSON(201, "You have successfully added members to the tree")
@@ -126,6 +134,13 @@ func (dw *DoWorkResource) AddMembers(c *gin.Context) {
 			addMembers := bson.M{"$push": bson.M{"members": value}}
 			err := dw.mongo.C(org).Update(colQuerier, addMembers)
 			CheckErr(err, "Mongo failed to add members to "+org+" organization")
+
+			// Update user's doc in Users with the name of the org
+			memberId := bson.ObjectIdHex(value.UserId)
+			colQuerier2 := bson.M{"_id": memberId}
+			updateUsersDoc := bson.M{"$push": bson.M{"orgs": org}}
+			err2 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
+			CheckErr(err2, "Mongo failed to add org to user's document in Users")
 		}
 		c.JSON(201, "You have successfully added members to the "+org+" organization")
 	}
@@ -139,7 +154,7 @@ func (dw *DoWorkResource) DeleteMembers(c *gin.Context) {
 	// remove member from tree's members array if tree ID provided
 	if reqBody.UpdateTree {
 
-		id := bson.ObjectIdHex(reqBody.Tree)
+		id := bson.ObjectIdHex(reqBody.TreeId)
 
 		colQuerier := bson.M{"_id": id}
 		for _, value := range reqBody.Members {
@@ -147,6 +162,14 @@ func (dw *DoWorkResource) DeleteMembers(c *gin.Context) {
 			removeMembers := bson.M{"$pull": bson.M{"members": bson.M{"userid": value}}}
 			err := dw.mongo.C(org).Update(colQuerier, removeMembers)
 			CheckErr(err, "Mongo failed to remove members from the provided tree")
+
+			// Remove trees from user's doc in Users
+			memberId := bson.ObjectIdHex(value)
+			treeId := bson.ObjectIdHex(reqBody.TreeId)
+			colQuerier2 := bson.M{"_id": memberId}
+			updateUsersDoc := bson.M{"$pull": bson.M{"trees": bson.M{"treeid": treeId}}}
+			err2 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
+			CheckErr(err2, "Mongo failed to remove tree from user's document in Users")
 		}
 		c.JSON(201, "You have successfully removed members from the tree")
 
@@ -157,6 +180,13 @@ func (dw *DoWorkResource) DeleteMembers(c *gin.Context) {
 			removeMembers := bson.M{"$pull": bson.M{"members": bson.M{"userid": value}}}
 			err := dw.mongo.C(org).Update(colQuerier, removeMembers)
 			CheckErr(err, "Mongo failed to remove members from "+org+" organization")
+
+			// Remove org from user's doc in Users
+			memberId := bson.ObjectIdHex(value)
+			colQuerier2 := bson.M{"_id": memberId}
+			updateUsersDoc := bson.M{"$pull": bson.M{"orgs": org}}
+			err2 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
+			CheckErr(err2, "Mongo failed to remove org from user's document in Users")
 		}
 		c.JSON(201, "You have successfully removed members from the "+org+" organization")
 	}

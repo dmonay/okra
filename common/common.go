@@ -34,13 +34,14 @@ type TreeJson struct {
 
 type MembersJson struct {
 	UpdateTree bool     `json:"updateTree,omitempty"`
-	Tree       string   `json:"tree,omitempty"`
+	TreeName   string   `json:"treeName,omitempty"`
+	TreeId     string   `json:"treeId,omitempty"`
 	Members    []Member `json:"members"`
 }
 
 type MembersJsonDelete struct {
 	UpdateTree bool     `json:"updateTree,omitempty"`
-	Tree       string   `json:"tree,omitempty"`
+	TreeId     string   `json:"treeId,omitempty"`
 	Members    []string `json:"members"`
 }
 
