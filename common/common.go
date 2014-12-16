@@ -38,6 +38,12 @@ type MembersJson struct {
 	Members    []Member `json:"members"`
 }
 
+type MembersJsonDelete struct {
+	UpdateTree bool     `json:"updateTree,omitempty"`
+	Tree       string   `json:"tree,omitempty"`
+	Members    []string `json:"members"`
+}
+
 type Member struct {
 	Username string `json:"userName"`
 	UserId   string `json:"userId"`
