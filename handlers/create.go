@@ -27,9 +27,9 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	colQuerier := bson.M{"_id": objId}
 	updateTimeframe := bson.M{"$push": bson.M{"orgs": org}}
 	err := dw.mongo.C("Users").Update(colQuerier, updateTimeframe)
-	CheckErr(err, "Mongo failed to add orgnization to user's document in Users")
+	CheckErr(err, "Mongo failed to add organization to user's document in Users")
 
-	// c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3333")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.JSON(201, "You have successfully created an organization")
 }
 
@@ -38,10 +38,10 @@ type OrgMembers struct {
 	Name    string   `bson:"name"`
 }
 
-// func (dw *DoWorkResource) CreateOrgOpts(c *gin.Context) {
-// 	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3333")
-// 	c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-// }
+func (dw *DoWorkResource) CreateOrgOpts(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+}
 
 func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 

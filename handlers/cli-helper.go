@@ -45,7 +45,7 @@ func Run(cfg common.Config) error {
 	r.POST("/login", doWorkResource.Login)
 	// r.POST("/logout", handlers.Logout)
 	r.POST("/create/organization", doWorkResource.CreateOrg)
-	// r.OPTIONS("/create/organization", doWorkResource.CreateOrgOpts)
+	r.OPTIONS("/create/organization", doWorkResource.CreateOrgOpts)
 	r.POST("/create/tree/:organization", doWorkResource.CreateTree)
 	r.POST("/update/mission/:organization", doWorkResource.UpdateMission)
 	r.POST("/update/members/:organization", doWorkResource.AddMembers)
