@@ -7,6 +7,7 @@ import (
 	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
 	// "gopkg.in/mgo.v2"
+	"github.com/tommy351/gin-cors"
 	"gopkg.in/yaml.v1"
 	"io/ioutil"
 	"log"
@@ -39,13 +40,14 @@ func Run(cfg common.Config) error {
 
 	doWorkResource := &DoWorkResource{mongo: mongodb}
 
-	r := gin.Default()
+	r := gin.New()
+
+	r.Use(cors.Middleware(cors.Options{}))
 
 	r.POST("/register", doWorkResource.Register)
 	r.POST("/login", doWorkResource.Login)
 	// r.POST("/logout", handlers.Logout)
 	r.POST("/create/organization", doWorkResource.CreateOrg)
-	r.OPTIONS("/create/organization", doWorkResource.CreateOrgOpts)
 	r.POST("/create/tree/:organization", doWorkResource.CreateTree)
 	r.POST("/update/mission/:organization", doWorkResource.UpdateMission)
 	r.POST("/update/members/:organization", doWorkResource.AddMembers)
