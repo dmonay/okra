@@ -44,6 +44,10 @@ func Run(cfg common.Config) error {
 
 	r.Use(cors.Middleware(cors.Options{}))
 
+	// Global middlewares
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
+
 	r.POST("/register", doWorkResource.Register)
 	r.POST("/login", doWorkResource.Login)
 	// r.POST("/logout", handlers.Logout)

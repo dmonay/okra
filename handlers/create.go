@@ -92,7 +92,7 @@ func (dw *DoWorkResource) UpdateMission(c *gin.Context) {
 	err := dw.mongo.C(org).Update(colQuerier, setMission)
 	CheckErr(err, "Mongo failed to update mission")
 
-	c.JSON(201, "You have successfully added a mission")
+	c.JSON(201, mission)
 }
 
 func (dw *DoWorkResource) AddMembers(c *gin.Context) {
