@@ -19,16 +19,19 @@ type UserJson struct {
 
 type MissionJson struct {
 	Mission string `json:"mission"`
+	TreeId  string `json:"treeId,omitempty"`
 }
 
 type OrganizationJson struct {
 	Organization string `json:"organization"`
 	UserId       string `json:"userId" bson:"_id,omitempty"`
+	UserName     string `json:"username"`
 }
 
 type TreeJson struct {
 	TreeName  string `json:"treeName"`
 	Timeframe string `json:"timeframe"`
+	UserName  string `json:"username"`
 	UserId    string `json:"userId" bson:"_id,omitempty"`
 }
 
@@ -53,6 +56,7 @@ type Member struct {
 
 type ObjectiveJson struct {
 	Id      string                       `json:"id"`
+	TreeId  string                       `json:"treeId,omitempty"`
 	Name    string                       `json:"name"`
 	Body    string                       `json:"body"`
 	Active  bool                         `json:"active"`

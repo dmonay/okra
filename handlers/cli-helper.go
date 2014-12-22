@@ -58,8 +58,7 @@ func Run(cfg common.Config) error {
 	r.DELETE("/update/members/:organization", doWorkResource.DeleteMembers)
 	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
 	r.POST("/create/objective/:organization/:objective", doWorkResource.CreateKeyResult)
-
-	// r.POST("/get/trees/", doWorkResource.GetTrees)
+	r.GET("/get/trees/:organization/:treeid", doWorkResource.GetTrees)
 
 	r.Run(cfg.SvcHost)
 
