@@ -50,9 +50,12 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 	member := reqBody.UserName
 	members := []string{member}
 	var emptyObj ObjectiveMongo
+	id := bson.NewObjectId()
 
 	// 1. Create tree and upsert it into the org collection
 	treeStruct := &OkrTree{
+		id,
+		"tree",
 		org,
 		"",
 		members,
@@ -68,7 +71,7 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 	colQuerier := bson.M{"treename": treeName}
 	upsertTree := bson.M{"$set": treeStruct}
 	info, err := dw.mongo.C(org).Upsert(colQuerier, upsertTree)
-	CheckErr(err, "Mongo failed to create collection for "+org+" organization")
+	CheckErr(err, "Mongo failed to create tree for "+org+" organization")
 
 	// 2. Update user's doc in Users with the ObjId and name of the tree
 	treeId := info.UpsertedId.(bson.ObjectId)
@@ -241,12 +244,38 @@ func (dw *DoWorkResource) GetTrees(c *gin.Context) {
 	var result OkrTree
 
 	err := dw.mongo.C(org).Find(bson.M{"_id": id}).One(&result)
+	result.Id = id
 	CheckErr(err, "Failed to retrieve tree from Mongo")
 
 	c.JSON(200, result)
 }
 
+func (dw *DoWorkResource) GetAllTrees(c *gin.Context) {
+	org := c.Params.ByName("organization")
+
+	var intermResult []OkrTree
+	err4 := dw.mongo.C(org).Find(bson.M{"type": "tree"}).All(&intermResult)
+	CheckErr(err4, "Failed to retrieve trees in organization "+org+" from Mongo")
+	length := len(intermResult)
+
+	result := make([]TreeInOrg, length)
+
+	for key, value := range intermResult {
+		treeName := value.TreeName
+		treeId := value.Id
+		active := value.Active
+
+		result[key].Name = treeName
+		result[key].Id = treeId
+		result[key].Active = active
+	}
+
+	c.JSON(200, result)
+}
+
 type OkrTree struct {
+	Id         bson.ObjectId `bson:"_id"`
+	Type       string
 	OrgName    string
 	Mission    string
 	Members    []string
@@ -265,4 +294,10 @@ type ObjectiveMongo struct {
 	Body    string                       `json:"body"`
 	Active  bool                         `json:"active"`
 	Members map[string]map[string]string `json:"members"`
+}
+
+type TreeInOrg struct {
+	Name   string        `bson:"treename"`
+	Id     bson.ObjectId `bson:"_id"`
+	Active bool          `bson:"active"`
 }
