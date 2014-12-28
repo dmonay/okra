@@ -247,6 +247,8 @@ func (dw *DoWorkResource) GetTrees(c *gin.Context) {
 	result.Id = id
 	CheckErr(err, "Failed to retrieve tree from Mongo")
 
+	origin := c.Request.Header.Get("Origin")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 	c.JSON(200, result)
 }
 
@@ -270,6 +272,8 @@ func (dw *DoWorkResource) GetAllTrees(c *gin.Context) {
 		result[key].Active = active
 	}
 
+	origin := c.Request.Header.Get("Origin")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 	c.JSON(200, result)
 }
 
