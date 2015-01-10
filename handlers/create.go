@@ -18,12 +18,10 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	objId := bson.ObjectIdHex(reqBody.UserId)
 
 	// 1. Create collection with members document
-
 	memObj := common.Member{reqBody.UserName, reqBody.UserId, "admin"}
-	var d []common.Member
-	d = append(d, memObj)
+	arrayOfMembers := []common.Member{memObj}
 
-	membersDoc := &common.OrgMembers{d, "membersArray"}
+	membersDoc := &common.OrgMembers{arrayOfMembers, "membersArray"}
 	err2 := dw.mongo.C(org).Insert(membersDoc)
 	CheckErr(err2, "Mongo failed to create collection with the empty members array")
 
@@ -262,8 +260,6 @@ func (dw *DoWorkResource) GetTrees(c *gin.Context) {
 	result.Id = id
 	CheckErr(err, "Failed to retrieve tree from Mongo")
 
-	origin := c.Request.Header.Get("Origin")
-	c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 	c.JSON(200, result)
 }
 
@@ -287,7 +283,5 @@ func (dw *DoWorkResource) GetAllTrees(c *gin.Context) {
 		result[key].Active = active
 	}
 
-	origin := c.Request.Header.Get("Origin")
-	c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
-	c.JSON(302, result)
+	c.JSON(200, result)
 }

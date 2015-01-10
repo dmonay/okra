@@ -59,7 +59,7 @@ func Run(cfg common.Config) error {
 	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
 	r.POST("/create/objective/:organization/:objective", doWorkResource.CreateKeyResult)
 	r.GET("/get/trees/:organization/:treeid", doWorkResource.GetTrees)
-	r.GET("/get/trees/:organization/", doWorkResource.GetAllTrees)
+	r.GET("/get/trees/:organization", doWorkResource.GetAllTrees)
 
 	r.Run(cfg.SvcHost)
 

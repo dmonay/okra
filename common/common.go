@@ -50,12 +50,6 @@ type MembersJsonDelete struct {
 	Members    []string `json:"members"`
 }
 
-type Member struct {
-	Username string `json:"userName"`
-	UserId   string `json:"userId",omitempty`
-	Role     string `json:"role"`
-}
-
 type ObjectiveJson struct {
 	Id      string                       `json:"id"`
 	TreeId  string                       `json:"treeId,omitempty"`
@@ -86,6 +80,12 @@ type UserTree struct {
 type OrgMembers struct {
 	Members []Member `bson:"members"`
 	Name    string   `bson:"name"`
+}
+
+type Member struct {
+	Username string `json:"userName"`
+	UserId   string `json:"userId",omitempty`
+	Role     string `json:"role"`
 }
 
 type UsersObj struct {
