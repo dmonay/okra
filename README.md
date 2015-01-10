@@ -1,9 +1,7 @@
-Okra
+![](okra.png)
 =======================
 
 An OKR app to manage and facilitate your company's objectives and key results between team members.
-
-![](okra.png)
 
 ##Dependencies
 - [gin](github.com/gin-gonic/gin)
