@@ -32,20 +32,23 @@
             "body": "make sure you can pay the bills",
             "status": "in_progress",
             "priority": "high",
-            "tasks": {
-                "todo1": {
-                    "users": [
-                        "Ayrab$$$"
-                    ],
-                    "name": "network",
-                    "body": "go to 5 meetups",
-                    "status": "in_progress",
-                    "priority": "high"
-                },
-                "todo2": {},
-                "todo3": {},
-                "todo4": {}
-            }
+            "tasks": [{
+                "users": [
+                    "ItsTejababy"
+                ],
+                "name": "Some events up in here",
+                "body": "go to 5 meetups",
+                "status": "in_progress",
+                "priority": "high"
+            }, {
+                "users": [
+                    "ItsTejababy"
+                ],
+                "name": "Make Bread",
+                "body": "go to 5 meetups",
+                "status": "in_progress",
+                "priority": "high"
+            }]
         }]
     }, {
         "users": [
@@ -55,24 +58,27 @@
             "users": [
                 "Ayrab$$$", "ItsTejababy"
             ],
-            "name": "salary > 80K",
+            "name": "Networking",
             "body": "make sure you can pay the bills",
             "status": "in_progress",
             "priority": "high",
-            "tasks": {
-                "todo1": {
-                    "users": [
-                        "Ayrab$$$"
-                    ],
-                    "name": "network",
-                    "body": "go to 5 meetups",
-                    "status": "in_progress",
-                    "priority": "high"
-                },
-                "todo2": {},
-                "todo3": {},
-                "todo4": {}
-            }
+            "tasks": [{
+                "users": [
+                    "Ayrab$$$"
+                ],
+                "name": "Event 11/12/2015",
+                "body": "go to 5 meetups",
+                "status": "in_progress",
+                "priority": "high"
+            }, {
+                "users": [
+                    "Ayrab$$$"
+                ],
+                "name": "Do some cool stuff",
+                "body": "go to 5 meetups",
+                "status": "in_progress",
+                "priority": "high"
+            }]
         }, {
             "users": [
                 "Ayrab$$$", "ItsTejababy"
@@ -81,20 +87,15 @@
             "body": "make sure you can pay the bills",
             "status": "in_progress",
             "priority": "high",
-            "tasks": {
-                "todo1": {
-                    "users": [
-                        "Ayrab$$$"
-                    ],
-                    "name": "network",
-                    "body": "go to 5 meetups",
-                    "status": "in_progress",
-                    "priority": "high"
-                },
-                "todo2": {},
-                "todo3": {},
-                "todo4": {}
-            }
+            "tasks": [{
+                "users": [
+                    "Ayrab$$$"
+                ],
+                "name": "Get Shit Done!",
+                "body": "go to 5 meetups",
+                "status": "in_progress",
+                "priority": "high"
+            }]
         }]
     }]
 }
