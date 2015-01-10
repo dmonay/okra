@@ -1,5 +1,5 @@
 {
-    "org_name": "Creationary",
+    "orgName": "Creationary",
     "members": [{
         "userName": "Alap23",
         "userId": "fsdfdsfd8fds9f8ds8f7",
@@ -20,11 +20,11 @@
     "active": true,
     "timeframe": "annual",
     "mission": "get money get paid",
-    "objective1": {
+    "objectives": [{
         "users": [
             "Ayrab$$$", "ItsTejababy"
         ],
-        "key_result1": {
+        "key_results": [{
             "users": [
                 "Ayrab$$$", "ItsTejababy"
             ],
@@ -32,24 +32,70 @@
             "body": "make sure you can pay the bills",
             "status": "in_progress",
             "priority": "high",
-            "tasks": {
-                "todo1": {
-                    "users": [
-                        "Ayrab$$$"
-                    ],
-                    "name": "network",
-                    "body": "go to 5 meetups",
-                    "status": "in_progress",
-                    "priority": "high"
-                },
-                "todo2": {},
-                "todo3": {},
-                "todo4": {}
-            }
-        }
-    },
-    "objective2": {},
-    "objective3": {},
-    "objective4": {},
-    "objective5": {}
+            "tasks": [{
+                "users": [
+                    "ItsTejababy"
+                ],
+                "name": "Some events up in here",
+                "body": "go to 5 meetups",
+                "status": "in_progress",
+                "priority": "high"
+            }, {
+                "users": [
+                    "ItsTejababy"
+                ],
+                "name": "Make Bread",
+                "body": "go to 5 meetups",
+                "status": "in_progress",
+                "priority": "high"
+            }]
+        }]
+    }, {
+        "users": [
+            "ItsTejababy"
+        ],
+        "key_results": [{
+            "users": [
+                "Ayrab$$$", "ItsTejababy"
+            ],
+            "name": "Networking",
+            "body": "make sure you can pay the bills",
+            "status": "in_progress",
+            "priority": "high",
+            "tasks": [{
+                "users": [
+                    "Ayrab$$$"
+                ],
+                "name": "Event 11/12/2015",
+                "body": "go to 5 meetups",
+                "status": "in_progress",
+                "priority": "high"
+            }, {
+                "users": [
+                    "Ayrab$$$"
+                ],
+                "name": "Do some cool stuff",
+                "body": "go to 5 meetups",
+                "status": "in_progress",
+                "priority": "high"
+            }]
+        }, {
+            "users": [
+                "Ayrab$$$", "ItsTejababy"
+            ],
+            "name": "salary > 80K",
+            "body": "make sure you can pay the bills",
+            "status": "in_progress",
+            "priority": "high",
+            "tasks": [{
+                "users": [
+                    "Ayrab$$$"
+                ],
+                "name": "Get Shit Done!",
+                "body": "go to 5 meetups",
+                "status": "in_progress",
+                "priority": "high"
+            }]
+        }]
+    }]
 }
