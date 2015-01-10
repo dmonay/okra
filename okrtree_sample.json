@@ -1,30 +1,86 @@
+// {
+//     "org_name": "Creationary",
+//     "members": [{
+//         "userName": "Alap23",
+//         "userId": "fsdfdsfd8fds9f8ds8f7"
+//         "role": "employee"
+//     }, {
+//         "userName": "ItsTejababy",
+//         "userId": "fsdfdsfd8fds9f8ds8f7"
+//         "role": "employee"
+//     }, {
+//         "userName": "Ayrab",
+//         "userId": "fsdfdsfd8fds9f8ds8f7"
+//         "role": "admin"
+//     }, {
+//         "userName": "Swag",
+//         "userId": "fsdfdsfd8fds9f8ds8f7"
+//         "role": "admin"
+//     }],
+//     "active": true,
+//     "timeframe": "annual",
+//     "mission": "get money get paid",
+//     "objective1": {
+//         "users": [
+//             "Ayrab$$$", "ItsTejababy"
+//         ],
+//         "key_result1": {
+//             "users": [
+//                 "Ayrab$$$", "ItsTejababy"
+//             ],
+//             "name": "salary > 80K",
+//             "body": "make sure you can pay the bills",
+//             "status": "in_progress",
+//             "priority": "high",
+//             "tasks": {
+//                 "todo1": {
+//                     "users": [
+//                         "Ayrab$$$"
+//                     ],
+//                     "name": "network",
+//                     "body": "go to 5 meetups",
+//                     "status": "in_progress",
+//                     "priority": "high"
+//                 },
+//                 "todo2": {},
+//                 "todo3": {},
+//                 "todo4": {}
+//             }
+//         }
+//     },
+//     "objective2": {},
+//     "objective3": {},
+//     "objective4": {},
+//     "objective5": {}
+// }
+
 {
-    "org_name": "Creationary",
+    "orgName": "Creationary",
     "members": [{
         "userName": "Alap23",
-        "userId": "fsdfdsfd8fds9f8ds8f7"
+        "userId": "fsdfdsfd8fds9f8ds8f7",
         "role": "employee"
     }, {
         "userName": "ItsTejababy",
-        "userId": "fsdfdsfd8fds9f8ds8f7"
+        "userId": "fsdfdsfd8fds9f8ds8f7",
         "role": "employee"
     }, {
         "userName": "Ayrab",
-        "userId": "fsdfdsfd8fds9f8ds8f7"
+        "userId": "fsdfdsfd8fds9f8ds8f7",
         "role": "admin"
     }, {
         "userName": "Swag",
-        "userId": "fsdfdsfd8fds9f8ds8f7"
+        "userId": "fsdfdsfd8fds9f8ds8f7",
         "role": "admin"
     }],
     "active": true,
     "timeframe": "annual",
     "mission": "get money get paid",
-    "objective1": {
+    "objectives": [{
         "users": [
             "Ayrab$$$", "ItsTejababy"
         ],
-        "key_result1": {
+        "key_results": [{
             "users": [
                 "Ayrab$$$", "ItsTejababy"
             ],
@@ -46,10 +102,55 @@
                 "todo3": {},
                 "todo4": {}
             }
-        }
-    },
-    "objective2": {},
-    "objective3": {},
-    "objective4": {},
-    "objective5": {}
+        }]
+    }, {
+        "users": [
+            "ItsTejababy"
+        ],
+        "key_results": [{
+            "users": [
+                "Ayrab$$$", "ItsTejababy"
+            ],
+            "name": "salary > 80K",
+            "body": "make sure you can pay the bills",
+            "status": "in_progress",
+            "priority": "high",
+            "tasks": {
+                "todo1": {
+                    "users": [
+                        "Ayrab$$$"
+                    ],
+                    "name": "network",
+                    "body": "go to 5 meetups",
+                    "status": "in_progress",
+                    "priority": "high"
+                },
+                "todo2": {},
+                "todo3": {},
+                "todo4": {}
+            }
+        }, {
+            "users": [
+                "Ayrab$$$", "ItsTejababy"
+            ],
+            "name": "salary > 80K",
+            "body": "make sure you can pay the bills",
+            "status": "in_progress",
+            "priority": "high",
+            "tasks": {
+                "todo1": {
+                    "users": [
+                        "Ayrab$$$"
+                    ],
+                    "name": "network",
+                    "body": "go to 5 meetups",
+                    "status": "in_progress",
+                    "priority": "high"
+                },
+                "todo2": {},
+                "todo3": {},
+                "todo4": {}
+            }
+        }]
+    }]
 }
