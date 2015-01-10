@@ -19,7 +19,7 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 
 	// 1. Create collection with members document
 
-	memObj := common.Member{reqBody.UserName, reqBody.UserId, reqBody.UserRole}
+	memObj := common.Member{reqBody.UserName, reqBody.UserId, "admin"}
 	var d []common.Member
 	d = append(d, memObj)
 
@@ -49,7 +49,7 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 	id := bson.NewObjectId()
 
 	// add member who created Tree to Tree
-	memObj := common.Member{reqBody.UserName, reqBody.UserId, reqBody.UserRole}
+	memObj := common.Member{reqBody.UserName, reqBody.UserId, "admin"}
 	var members []common.Member
 	members = append(members, memObj)
 
