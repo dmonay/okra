@@ -1,4 +1,4 @@
-![](okra.png)
+![](okra-logo.png)
 =======================
 
 An OKR app to manage and facilitate your company's objectives and key results between team members.
