@@ -26,6 +26,7 @@ type OrganizationJson struct {
 	Organization string `json:"organization"`
 	UserId       string `json:"userId" bson:"_id,omitempty"`
 	UserName     string `json:"username"`
+	UserRole     string `json:"role"`
 }
 
 type TreeJson struct {
@@ -33,6 +34,7 @@ type TreeJson struct {
 	Timeframe string `json:"timeframe"`
 	UserName  string `json:"username"`
 	UserId    string `json:"userId" bson:"_id,omitempty"`
+	UserRole  string `json:"role"`
 }
 
 type MembersJson struct {
@@ -50,7 +52,7 @@ type MembersJsonDelete struct {
 
 type Member struct {
 	Username string `json:"userName"`
-	UserId   string `json:"userId"`
+	UserId   string `json:"userId",omitempty`
 	Role     string `json:"role"`
 }
 
@@ -79,4 +81,45 @@ type UserOrgs struct {
 type UserTree struct {
 	TreeName string
 	TreeId   bson.ObjectId
+}
+
+type OrgMembers struct {
+	Members []Member `bson:"members"`
+	Name    string   `bson:"name"`
+}
+
+type UsersObj struct {
+	Username string        `json:"username"`
+	Orgs     []string      `bson:"orgs" omitempty`
+	Trees    []string      `bson:"trees" omitempty`
+	Id       bson.ObjectId `bson:"_id"`
+}
+
+type OkrTree struct {
+	Id         bson.ObjectId `bson:"_id"`
+	Type       string
+	OrgName    string
+	Mission    string
+	Members    []Member
+	Active     bool
+	Timeframe  string
+	TreeName   string
+	Objective1 ObjectiveMongo
+	Objective2 ObjectiveMongo
+	Objective3 ObjectiveMongo
+	Objective4 ObjectiveMongo
+	Objective5 ObjectiveMongo
+}
+
+type ObjectiveMongo struct {
+	Name    string                       `json:"name"`
+	Body    string                       `json:"body"`
+	Active  bool                         `json:"active"`
+	Members map[string]map[string]string `json:"members"`
+}
+
+type TreeInOrg struct {
+	Name   string        `bson:"treename"`
+	Id     bson.ObjectId `bson:"_id"`
+	Active bool          `bson:"active"`
 }
