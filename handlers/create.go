@@ -18,9 +18,12 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	objId := bson.ObjectIdHex(reqBody.UserId)
 
 	// 1. Create collection with members document
-	member := reqBody.UserName
-	memArray := []string{member}
-	membersDoc := &OrgMembers{memArray, "membersArray"}
+
+	memObj := common.Member{reqBody.UserName, reqBody.UserId, reqBody.UserRole}
+	var d []common.Member
+	d = append(d, memObj)
+
+	membersDoc := &common.OrgMembers{d, "membersArray"}
 	err2 := dw.mongo.C(org).Insert(membersDoc)
 	CheckErr(err2, "Mongo failed to create collection with the empty members array")
 
@@ -33,11 +36,6 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 	c.JSON(201, "You have successfully created an organization")
 }
 
-type OrgMembers struct {
-	Members []string `bson:"members"`
-	Name    string   `bson:"name"`
-}
-
 func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 
 	var reqBody common.TreeJson
@@ -47,13 +45,16 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 	timeframe := reqBody.Timeframe
 	treeName := reqBody.TreeName
 	objId := bson.ObjectIdHex(reqBody.UserId)
-	member := reqBody.UserName
-	members := []string{member}
-	var emptyObj ObjectiveMongo
+	var emptyObj common.ObjectiveMongo
 	id := bson.NewObjectId()
 
+	// add member who created Tree to Tree
+	memObj := common.Member{reqBody.UserName, reqBody.UserId, reqBody.UserRole}
+	var members []common.Member
+	members = append(members, memObj)
+
 	// 1. Create tree and upsert it into the org collection
-	treeStruct := &OkrTree{
+	treeStruct := &common.OkrTree{
 		id,
 		"tree",
 		org,
@@ -113,17 +114,24 @@ func (dw *DoWorkResource) AddMembers(c *gin.Context) {
 
 		colQuerier := bson.M{"_id": treeId}
 		for _, value := range reqBody.Members {
+
+			// Get userId of user
+			var result common.UsersObj
+			err := dw.mongo.C("Users").Find(bson.M{"username": value.Username}).One(&result)
+			CheckErr(err, "Mongo failed to find the "+value.Username+"'s doc in Users")
+			value.UserId = result.Id.Hex()
+
+			// Add member to tree
 			addMembers := bson.M{"$push": bson.M{"members": value}}
-			err := dw.mongo.C(org).Update(colQuerier, addMembers)
-			CheckErr(err, "Mongo failed to add members to the provided tree")
+			err2 := dw.mongo.C(org).Update(colQuerier, addMembers)
+			CheckErr(err2, "Mongo failed to add members to the provided tree")
 
 			// Update user's doc in Users with the ObjId and name of the tree
-			memberId := bson.ObjectIdHex(value.UserId)
 			tree := common.UserTree{reqBody.TreeName, treeId}
-			colQuerier2 := bson.M{"_id": memberId}
+			colQuerier2 := bson.M{"_id": result.Id}
 			updateUsersDoc := bson.M{"$push": bson.M{"trees": tree}}
-			err2 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
-			CheckErr(err2, "Mongo failed to add tree to user's document in Users")
+			err3 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
+			CheckErr(err3, "Mongo failed to add tree to user's document in Users")
 		}
 
 		c.JSON(201, "You have successfully added members to the tree")
@@ -132,13 +140,20 @@ func (dw *DoWorkResource) AddMembers(c *gin.Context) {
 	} else {
 		colQuerier := bson.M{"name": "membersArray"}
 		for _, value := range reqBody.Members {
+
+			// Get userId of user
+			var result common.UsersObj
+			err := dw.mongo.C("Users").Find(bson.M{"username": value.Username}).One(&result)
+			CheckErr(err, "Mongo failed to find the "+value.Username+"'s doc in Users")
+			value.UserId = result.Id.Hex()
+
+			// add user to the org
 			addMembers := bson.M{"$push": bson.M{"members": value}}
-			err := dw.mongo.C(org).Update(colQuerier, addMembers)
-			CheckErr(err, "Mongo failed to add members to "+org+" organization")
+			err3 := dw.mongo.C(org).Update(colQuerier, addMembers)
+			CheckErr(err3, "Mongo failed to add members to "+org+" organization")
 
 			// Update user's doc in Users with the name of the org
-			memberId := bson.ObjectIdHex(value.UserId)
-			colQuerier2 := bson.M{"_id": memberId}
+			colQuerier2 := bson.M{"username": value.Username}
 			updateUsersDoc := bson.M{"$push": bson.M{"orgs": org}}
 			err2 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
 			CheckErr(err2, "Mongo failed to add org to user's document in Users")
@@ -202,7 +217,7 @@ func (dw *DoWorkResource) UpdateObjective(c *gin.Context) {
 
 	id := reqBody.Id
 	treeId := bson.ObjectIdHex(reqBody.TreeId)
-	obj := ObjectiveMongo{
+	obj := common.ObjectiveMongo{
 		Name:    reqBody.Name,
 		Body:    reqBody.Body,
 		Active:  reqBody.Active,
@@ -241,7 +256,7 @@ func (dw *DoWorkResource) GetTrees(c *gin.Context) {
 	treeId := c.Params.ByName("treeid")
 	id := bson.ObjectIdHex(treeId)
 
-	var result OkrTree
+	var result common.OkrTree
 
 	err := dw.mongo.C(org).Find(bson.M{"_id": id}).One(&result)
 	result.Id = id
@@ -255,12 +270,12 @@ func (dw *DoWorkResource) GetTrees(c *gin.Context) {
 func (dw *DoWorkResource) GetAllTrees(c *gin.Context) {
 	org := c.Params.ByName("organization")
 
-	var intermResult []OkrTree
+	var intermResult []common.OkrTree
 	err4 := dw.mongo.C(org).Find(bson.M{"type": "tree"}).All(&intermResult)
 	CheckErr(err4, "Failed to retrieve trees in organization "+org+" from Mongo")
 	length := len(intermResult)
 
-	result := make([]TreeInOrg, length)
+	result := make([]common.TreeInOrg, length)
 
 	for key, value := range intermResult {
 		treeName := value.TreeName
@@ -274,34 +289,5 @@ func (dw *DoWorkResource) GetAllTrees(c *gin.Context) {
 
 	origin := c.Request.Header.Get("Origin")
 	c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
-	c.JSON(200, result)
-}
-
-type OkrTree struct {
-	Id         bson.ObjectId `bson:"_id"`
-	Type       string
-	OrgName    string
-	Mission    string
-	Members    []string
-	Active     bool
-	Timeframe  string
-	TreeName   string
-	Objective1 ObjectiveMongo
-	Objective2 ObjectiveMongo
-	Objective3 ObjectiveMongo
-	Objective4 ObjectiveMongo
-	Objective5 ObjectiveMongo
-}
-
-type ObjectiveMongo struct {
-	Name    string                       `json:"name"`
-	Body    string                       `json:"body"`
-	Active  bool                         `json:"active"`
-	Members map[string]map[string]string `json:"members"`
-}
-
-type TreeInOrg struct {
-	Name   string        `bson:"treename"`
-	Id     bson.ObjectId `bson:"_id"`
-	Active bool          `bson:"active"`
+	c.JSON(302, result)
 }

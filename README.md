@@ -51,13 +51,7 @@ go test -check.b
 
 ## Documentation
 
-1. Migrate the db:
-
-```go 
-go run server.go migratedb
-```
-
-2. Start the server: 
+1. Start the server: 
 
 ```go 
 go run server.go server
