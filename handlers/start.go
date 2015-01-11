@@ -42,24 +42,37 @@ func Run(cfg common.Config) error {
 
 	r := gin.New()
 
+	// middlewares
 	r.Use(cors.Middleware(cors.Options{}))
-
-	// Global middlewares
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
+	// user
 	r.POST("/register", doWorkResource.Register)
 	r.POST("/login", doWorkResource.Login)
-	// r.POST("/logout", handlers.Logout)
+	r.POST("/logout", doWorkResource.Logout)
+
+	// orgs
 	r.POST("/create/organization", doWorkResource.CreateOrg)
+	r.GET("/get/orgs/:userid", doWorkResource.GetAllOrgs)
+
+	// trees
 	r.POST("/create/tree/:organization", doWorkResource.CreateTree)
-	r.POST("/update/mission/:organization", doWorkResource.UpdateMission)
-	r.POST("/update/members/:organization", doWorkResource.AddMembers)
-	r.DELETE("/update/members/:organization", doWorkResource.DeleteMembers)
-	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
-	r.POST("/create/objective/:organization/:objective", doWorkResource.CreateKeyResult)
 	r.GET("/get/trees/:organization/:treeid", doWorkResource.GetTree)
 	r.GET("/get/trees/:organization", doWorkResource.GetAllTrees)
+
+	// mission
+	r.POST("/update/mission/:organization", doWorkResource.UpdateMission)
+
+	// members
+	r.POST("/update/members/:organization", doWorkResource.AddMembers)
+	r.DELETE("/update/members/:organization", doWorkResource.DeleteMembers)
+
+	// objectives and key results
+	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
+	r.POST("/create/kr/:organization/:objective", doWorkResource.CreateKeyResult)
+
+	// tasks
 
 	r.Run(cfg.SvcHost)
 

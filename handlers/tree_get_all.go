@@ -10,8 +10,8 @@ func (dw *DoWorkResource) GetAllTrees(c *gin.Context) {
 	org := c.Params.ByName("organization")
 
 	var intermResult []common.OkrTree
-	err4 := dw.mongo.C(org).Find(bson.M{"type": "tree"}).All(&intermResult)
-	CheckErr(err4, "Failed to retrieve trees in organization "+org+" from Mongo")
+	err := dw.mongo.C(org).Find(bson.M{"type": "tree"}).All(&intermResult)
+	CheckErr(err, "Failed to retrieve trees in organization "+org+" from Mongo")
 	length := len(intermResult)
 
 	result := make([]common.TreeInOrg, length)
