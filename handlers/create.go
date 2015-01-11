@@ -206,24 +206,33 @@ func (dw *DoWorkResource) UpdateObjective(c *gin.Context) {
 
 	org := c.Params.ByName("organization")
 	var reqBody common.ObjectiveJson
-
 	c.Bind(&reqBody)
 
-	id := reqBody.Id
+	arrayOfMembers := []common.Member{}
+	for _, value := range reqBody.Members {
+		// Get userId of user
+		var result common.UsersObj
+		err := dw.mongo.C("Users").Find(bson.M{"username": value.Username}).One(&result)
+		CheckErr(err, "Mongo failed to find the "+value.Username+"'s doc in Users")
+
+		memObj := common.Member{value.Username, result.Id.Hex(), value.Role}
+		arrayOfMembers = append(arrayOfMembers, memObj)
+	}
+
 	treeId := bson.ObjectIdHex(reqBody.TreeId)
 	obj := common.ObjectiveMongo{
 		Name:      reqBody.Name,
 		Body:      reqBody.Body,
 		Completed: reqBody.Completed,
-		Members:   reqBody.Members,
+		Members:   arrayOfMembers,
 	}
 
 	colQuerier := bson.M{"_id": treeId}
-	addObjective := bson.M{"$set": bson.M{id: obj}}
+	addObjective := bson.M{"$push": bson.M{"objectives": obj}}
 	err := dw.mongo.C(org).Update(colQuerier, addObjective)
 	CheckErr(err, "Mongo failed to add objective")
 
-	c.JSON(201, "You have successfully added an objective to the "+org+" organization")
+	c.JSON(201, "You have successfully added an objective!")
 }
 
 func (dw *DoWorkResource) CreateKeyResult(c *gin.Context) {

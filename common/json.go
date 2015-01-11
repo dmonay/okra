@@ -40,7 +40,6 @@ type MembersJsonDelete struct {
 }
 
 type ObjectiveJson struct {
-	Id        string   `json:"id"`
 	TreeId    string   `json:"treeId,omitempty"`
 	Name      string   `json:"name"`
 	Body      string   `json:"body"`

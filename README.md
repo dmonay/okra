@@ -11,15 +11,13 @@ An OKR app to manage and facilitate your company's objectives and key results be
 - [cli](github.com/codegangsta/cli)
 
 ## Data Stores
-
-- MySQL
 - MongoDB
 
 ## Installation/Set up
 
-1. Install MySql and MongoDB.
+1. Install MongoDB.
 
-2. In your project directory, you can run
+2. In your project directory, run
 
 ``` go
 go get github.com/dmonay/okra
@@ -29,7 +27,7 @@ go get github.com/dmonay/okra
 ## Tests and Benchmarks
 
 
-*NOTE*: no tests as of yet. To be added. 
+*NOTE*: No tests as of yet. To be added. 
 
 To run tests, run 
 

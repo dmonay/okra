@@ -2,7 +2,6 @@ package main
 
 import (
 	// "fmt"
-
 	"github.com/codegangsta/cli"
 	"github.com/dmonay/okra/handlers"
 	"os"
@@ -22,5 +21,4 @@ func main() {
 	app.Commands = handlers.Commands
 
 	app.Run(os.Args)
-
 }
