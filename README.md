@@ -5,8 +5,6 @@ An OKR app to manage and facilitate your company's objectives and key results be
 
 ##Dependencies
 - [gin](github.com/gin-gonic/gin)
-- [Go-MySQL-Driver](https://github.com/go-sql-driver/mysql)
-- [gorm](github.com/jinzhu/gorm)
 - [mgo](gopkg.in/mgo.v2)
 - [mgo/bson](gopkg.in/mgo.v2/bson)
 - [yaml](gopkg.in/yaml.v1)

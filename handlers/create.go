@@ -80,7 +80,7 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 	err2 := dw.mongo.C("Users").Update(colQuerier2, updateTimeframe)
 	CheckErr(err2, "Mongo failed to add tree to user's document in Users")
 
-	c.JSON(201, "You have successfully created a tree with the "+timeframe+" timeframe for the "+org+" organization")
+	c.JSON(201, treeStruct)
 }
 
 func (dw *DoWorkResource) UpdateMission(c *gin.Context) {
