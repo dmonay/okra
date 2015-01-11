@@ -40,6 +40,7 @@ type MembersJsonDelete struct {
 }
 
 type ObjectiveJson struct {
+	Id        string   `json:"id"`
 	TreeId    string   `json:"treeId,omitempty"`
 	Name      string   `json:"name"`
 	Body      string   `json:"body"`
@@ -48,10 +49,11 @@ type ObjectiveJson struct {
 }
 
 type KeyResultJson struct {
-	Id       string                       `json:"id"`
-	Members  map[string]map[string]string `json:"members"`
-	Name     string                       `json:"name"`
-	Body     string                       `json:"body"`
-	Active   bool                         `json:"active"`
-	Priority string                       `json:"priority"`
+	Id        string   `json:"id"`
+	TreeId    string   `json:"treeId,omitempty"`
+	Name      string   `json:"name"`
+	Body      string   `json:"body"`
+	Completed bool     `json:"completed"`
+	Members   []Member `json:"members"`
+	Priority  string   `json:"priority"`
 }

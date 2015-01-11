@@ -221,6 +221,7 @@ func (dw *DoWorkResource) UpdateObjective(c *gin.Context) {
 
 	treeId := bson.ObjectIdHex(reqBody.TreeId)
 	obj := common.ObjectiveMongo{
+		Id:        reqBody.Id,
 		Name:      reqBody.Name,
 		Body:      reqBody.Body,
 		Completed: reqBody.Completed,
@@ -243,11 +244,30 @@ func (dw *DoWorkResource) CreateKeyResult(c *gin.Context) {
 
 	c.Bind(&reqBody)
 
-	id := reqBody.Id
-	resultName := obj + "." + id
+	arrayOfMembers := []common.Member{}
+	for _, value := range reqBody.Members {
+		// Get userId of user
+		var result common.UsersObj
+		err := dw.mongo.C("Users").Find(bson.M{"username": value.Username}).One(&result)
+		CheckErr(err, "Mongo failed to find the "+value.Username+"'s doc in Users")
 
-	colQuerier := bson.M{"orgname": org}
-	addKeyResult := bson.M{"$set": bson.M{resultName: reqBody}}
+		memObj := common.Member{value.Username, result.Id.Hex(), value.Role}
+		arrayOfMembers = append(arrayOfMembers, memObj)
+	}
+
+	treeId := bson.ObjectIdHex(reqBody.TreeId)
+
+	kr := common.KeyResultsModel{
+		Id:        reqBody.Id,
+		Name:      reqBody.Name,
+		Body:      reqBody.Body,
+		Completed: reqBody.Completed,
+		Members:   arrayOfMembers,
+		Priority:  reqBody.Priority,
+	}
+
+	colQuerier := bson.M{"_id": treeId, "objectives.id": obj}
+	addKeyResult := bson.M{"$push": bson.M{"objectives.$.keyresults": kr}}
 	err := dw.mongo.C(org).Update(colQuerier, addKeyResult)
 	CheckErr(err, "Mongo failed to add key result")
 

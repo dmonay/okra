@@ -40,6 +40,7 @@ type OkrTree struct {
 }
 
 type ObjectiveMongo struct {
+	Id         string
 	Name       string
 	Body       string
 	Completed  bool
@@ -48,6 +49,7 @@ type ObjectiveMongo struct {
 }
 
 type KeyResultsModel struct {
+	Id        string
 	Name      string
 	Body      string
 	Completed bool
