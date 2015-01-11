@@ -58,6 +58,7 @@ func Run(cfg common.Config) error {
 
 	// trees
 	r.POST("/create/tree/:organization", doWorkResource.CreateTree)
+	r.POST("/update/tree/name/:organization/:treeid", doWorkResource.UpdateTreeName)
 	r.GET("/get/trees/:organization/:treeid", doWorkResource.GetTree)
 	r.GET("/get/trees/:organization", doWorkResource.GetAllTrees)
 
@@ -84,7 +85,6 @@ func InitMongo() (*mgo.Database, error) {
 	CheckErr(err, "mongo connection failed")
 
 	db := session.DB("testing")
-	CheckErr(err, "mongo opening database failed")
 
 	return db, nil
 }

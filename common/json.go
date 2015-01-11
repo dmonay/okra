@@ -6,11 +6,6 @@ type UserJson struct {
 	Trees    []string `bson:"trees" omitempty`
 }
 
-type MissionJson struct {
-	Mission string `json:"mission"`
-	TreeId  string `json:"treeId,omitempty"`
-}
-
 type OrganizationJson struct {
 	Organization string `json:"organization"`
 	UserId       string `json:"userId" bson:"_id,omitempty"`
