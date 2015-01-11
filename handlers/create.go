@@ -43,13 +43,13 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 	timeframe := reqBody.Timeframe
 	treeName := reqBody.TreeName
 	objId := bson.ObjectIdHex(reqBody.UserId)
-	var emptyObj common.ObjectiveMongo
 	id := bson.NewObjectId()
 
 	// add member who created Tree to Tree
 	memObj := common.Member{reqBody.UserName, reqBody.UserId, "admin"}
 	var members []common.Member
 	members = append(members, memObj)
+	objectives := []common.ObjectiveMongo{}
 
 	// 1. Create tree and upsert it into the org collection
 	treeStruct := &common.OkrTree{
@@ -61,11 +61,7 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 		true,
 		timeframe,
 		treeName,
-		emptyObj,
-		emptyObj,
-		emptyObj,
-		emptyObj,
-		emptyObj,
+		objectives,
 	}
 	colQuerier := bson.M{"treename": treeName}
 	upsertTree := bson.M{"$set": treeStruct}
@@ -216,10 +212,10 @@ func (dw *DoWorkResource) UpdateObjective(c *gin.Context) {
 	id := reqBody.Id
 	treeId := bson.ObjectIdHex(reqBody.TreeId)
 	obj := common.ObjectiveMongo{
-		Name:    reqBody.Name,
-		Body:    reqBody.Body,
-		Active:  reqBody.Active,
-		Members: reqBody.Members,
+		Name:      reqBody.Name,
+		Body:      reqBody.Body,
+		Completed: reqBody.Completed,
+		Members:   reqBody.Members,
 	}
 
 	colQuerier := bson.M{"_id": treeId}

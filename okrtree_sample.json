@@ -12,18 +12,17 @@
         "userName": "Ayrab",
         "userId": "fsdfdsfd8fds9f8ds8f7",
         "role": "admin"
-    }, {
-        "userName": "Swag",
-        "userId": "fsdfdsfd8fds9f8ds8f7",
-        "role": "admin"
     }],
     "active": true,
     "timeframe": "annual",
     "mission": "get money get paid",
     "objectives": [{
+        "name": "Go public",
+        "body": "details on how we going to go public up in this joint",
         "users": [
             "Ayrab$$$", "ItsTejababy"
         ],
+        "completed": false,
         "key_results": [{
             "users": [
                 "Ayrab$$$", "ItsTejababy"
