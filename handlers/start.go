@@ -6,8 +6,8 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
-	// "gopkg.in/mgo.v2"
 	"github.com/tommy351/gin-cors"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/yaml.v1"
 	"io/ioutil"
 	"log"
@@ -58,12 +58,28 @@ func Run(cfg common.Config) error {
 	r.DELETE("/update/members/:organization", doWorkResource.DeleteMembers)
 	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
 	r.POST("/create/objective/:organization/:objective", doWorkResource.CreateKeyResult)
-	r.GET("/get/trees/:organization/:treeid", doWorkResource.GetTrees)
+	r.GET("/get/trees/:organization/:treeid", doWorkResource.GetTree)
 	r.GET("/get/trees/:organization", doWorkResource.GetAllTrees)
 
 	r.Run(cfg.SvcHost)
 
 	return nil
+}
+
+func InitMongo() (*mgo.Database, error) {
+	session, err := mgo.Dial("localhost:27017")
+	CheckErr(err, "mongo connection failed")
+
+	db := session.DB("testing")
+	CheckErr(err, "mongo opening database failed")
+
+	return db, nil
+}
+
+func CheckErr(err error, msg string) {
+	if err != nil {
+		log.Fatalln(msg, err)
+	}
 }
 
 var Commands = []cli.Command{
