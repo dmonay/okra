@@ -11,9 +11,12 @@ func (dw *DoWorkResource) GetAllTrees(c *gin.Context) {
 
 	var intermResult []common.OkrTree
 	err := dw.mongo.C(org).Find(bson.M{"type": "tree"}).All(&intermResult)
-	CheckErr(err, "Failed to retrieve trees in organization "+org+" from Mongo")
-	length := len(intermResult)
+	if err != nil {
+		CheckErr(err, "Failed to retrieve trees in organization "+org+" from Mongo", c)
+		return
+	}
 
+	length := len(intermResult)
 	result := make([]common.TreeInOrg, length)
 
 	for key, value := range intermResult {
@@ -26,5 +29,5 @@ func (dw *DoWorkResource) GetAllTrees(c *gin.Context) {
 		result[key].Active = active
 	}
 
-	c.JSON(200, result)
+	c.JSON(200, SuccessMsg{result})
 }

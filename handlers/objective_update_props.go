@@ -46,7 +46,10 @@ func (dw *DoWorkResource) UpdateObjProperties(c *gin.Context) {
 	querier := bson.M{"_id": id, "objectives.id": obj}
 	updateName := bson.M{"$set": myMap}
 	err := dw.mongo.C(org).Update(querier, updateName)
-	CheckErr(err, "Mongo failed to update objective's properties")
+	if err != nil {
+		CheckErr(err, "Mongo failed to update objective's properties", c)
+		return
+	}
 
-	c.JSON(201, "Success")
+	c.JSON(201, SuccessMsg{"Successfully updated objective!"})
 }

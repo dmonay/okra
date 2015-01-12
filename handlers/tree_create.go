@@ -38,7 +38,10 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 	colQuerier := bson.M{"treename": treeName}
 	upsertTree := bson.M{"$set": treeStruct}
 	info, err := dw.mongo.C(org).Upsert(colQuerier, upsertTree)
-	CheckErr(err, "Mongo failed to create tree for "+org+" organization")
+	if err != nil {
+		CheckErr(err, "Mongo failed to create tree for "+org+" organization", c)
+		return
+	}
 
 	// 2. Update user's doc in Users with the ObjId and name of the tree
 	treeId := info.UpsertedId.(bson.ObjectId)
@@ -46,7 +49,10 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 	colQuerier2 := bson.M{"_id": objId}
 	updateTimeframe := bson.M{"$push": bson.M{"trees": tree}}
 	err2 := dw.mongo.C("Users").Update(colQuerier2, updateTimeframe)
-	CheckErr(err2, "Mongo failed to add tree to user's document in Users")
+	if err != nil {
+		CheckErr(err2, "Mongo failed to add tree to user's document in Users", c)
+		return
+	}
 
-	c.JSON(201, treeStruct)
+	c.JSON(201, SuccessMsg{treeStruct})
 }

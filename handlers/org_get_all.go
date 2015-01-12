@@ -11,8 +11,11 @@ func (dw *DoWorkResource) GetAllOrgs(c *gin.Context) {
 	id := bson.ObjectIdHex(org)
 
 	var result common.UsersObj
-	err4 := dw.mongo.C("Users").Find(bson.M{"_id": id}).One(&result)
-	CheckErr(err4, "Failed to retrieve orgs from Users coll in Mongo")
+	err := dw.mongo.C("Users").Find(bson.M{"_id": id}).One(&result)
+	if err != nil {
+		CheckErr(err, "Failed to retrieve orgs from Users coll in Mongo", c)
+		return
+	}
 
-	c.JSON(200, result.Orgs)
+	c.JSON(200, SuccessMsg{result.Orgs})
 }

@@ -14,8 +14,11 @@ func (dw *DoWorkResource) GetTree(c *gin.Context) {
 	var result common.OkrTree
 
 	err := dw.mongo.C(org).Find(bson.M{"_id": id}).One(&result)
+	if err != nil {
+		CheckErr(err, "Failed to retrieve tree from Mongo", c)
+		return
+	}
 	result.Id = id
-	CheckErr(err, "Failed to retrieve tree from Mongo")
 
-	c.JSON(200, result)
+	c.JSON(200, SuccessMsg{result})
 }

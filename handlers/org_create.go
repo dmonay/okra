@@ -21,13 +21,19 @@ func (dw *DoWorkResource) CreateOrg(c *gin.Context) {
 
 	membersDoc := &common.OrgMembers{arrayOfMembers, "membersArray"}
 	err2 := dw.mongo.C(org).Insert(membersDoc)
-	CheckErr(err2, "Mongo failed to create collection with the empty members array")
+	if err2 != nil {
+		CheckErr(err2, "Mongo failed to create collection with the empty members array", c)
+		return
+	}
 
 	// 2. Add organization to user's document in Users
 	colQuerier := bson.M{"_id": objId}
 	updateTimeframe := bson.M{"$push": bson.M{"orgs": org}}
 	err := dw.mongo.C("Users").Update(colQuerier, updateTimeframe)
-	CheckErr(err, "Mongo failed to add organization to user's document in Users")
+	if err != nil {
+		CheckErr(err, "Mongo failed to add organization to user's document in Users", c)
+		return
+	}
 
-	c.JSON(201, "You have successfully created an organization")
+	c.JSON(201, SuccessMsg{"You have successfully created an organization"})
 }

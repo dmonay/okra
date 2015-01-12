@@ -23,7 +23,10 @@ func (dw *DoWorkResource) UpdateMission(c *gin.Context) {
 	colQuerier := bson.M{"_id": treeId}
 	setMission := bson.M{"$set": bson.M{"mission": mission}}
 	err := dw.mongo.C(org).Update(colQuerier, setMission)
-	CheckErr(err, "Mongo failed to update mission")
+	if err != nil {
+		CheckErr(err, "Mongo failed to update mission", c)
+		return
+	}
 
-	c.JSON(201, mission)
+	c.JSON(201, SuccessMsg{mission})
 }

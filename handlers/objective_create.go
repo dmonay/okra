@@ -17,7 +17,10 @@ func (dw *DoWorkResource) CreateObjective(c *gin.Context) {
 		// Get userId of user
 		var result common.UsersObj
 		err := dw.mongo.C("Users").Find(bson.M{"username": value.Username}).One(&result)
-		CheckErr(err, "Mongo failed to find the "+value.Username+"'s doc in Users")
+		if err != nil {
+			CheckErr(err, "Mongo failed to find the "+value.Username+"'s doc in Users", c)
+			return
+		}
 
 		memObj := common.Member{value.Username, result.Id.Hex(), value.Role}
 		arrayOfMembers = append(arrayOfMembers, memObj)
@@ -34,8 +37,11 @@ func (dw *DoWorkResource) CreateObjective(c *gin.Context) {
 
 	colQuerier := bson.M{"_id": treeId}
 	addObjective := bson.M{"$push": bson.M{"objectives": obj}}
-	err := dw.mongo.C(org).Update(colQuerier, addObjective)
-	CheckErr(err, "Mongo failed to add objective")
+	err2 := dw.mongo.C(org).Update(colQuerier, addObjective)
+	if err2 != nil {
+		CheckErr(err2, "Mongo failed to add objective", c)
+		return
+	}
 
-	c.JSON(201, "You have successfully added an objective!")
+	c.JSON(201, SuccessMsg{"You have successfully added an objective!"})
 }

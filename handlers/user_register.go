@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"github.com/dmonay/okra/common"
-	// "fmt"
 	"github.com/gin-gonic/gin"
-	"gopkg.in/mgo.v2"
 )
 
 func (dw *DoWorkResource) Register(c *gin.Context) {
+
+	type User struct {
+		Username string
+	}
 
 	var user common.UserJson
 
@@ -17,16 +19,11 @@ func (dw *DoWorkResource) Register(c *gin.Context) {
 	orgs := []string{}
 	trees := []string{}
 
-	c.JSON(201, "You have registered, "+uname)
-
 	err := dw.mongo.C("Users").Insert(&common.UserJson{uname, orgs, trees})
-	CheckErr(err, "User not added to Users collection")
-}
+	if err != nil {
+		CheckErr(err, "User not added to Users collection", c)
+		return
+	}
 
-type DoWorkResource struct {
-	mongo *mgo.Database
-}
-
-type User struct {
-	Username string
+	c.JSON(201, SuccessMsg{"You have registered, " + uname})
 }

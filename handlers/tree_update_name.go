@@ -21,7 +21,10 @@ func (dw *DoWorkResource) UpdateTreeName(c *gin.Context) {
 	querier := bson.M{"_id": id}
 	updateName := bson.M{"$set": bson.M{"treename": newName}}
 	err := dw.mongo.C(org).Update(querier, updateName)
-	CheckErr(err, "Mongo failed to update tree name")
+	if err != nil {
+		CheckErr(err, "Mongo failed to update tree name", c)
+		return
+	}
 
-	c.JSON(201, "Success")
+	c.JSON(201, SuccessMsg{"Success"})
 }

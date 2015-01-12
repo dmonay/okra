@@ -18,9 +18,13 @@ func (dw *DoWorkResource) DeleteMembers(c *gin.Context) {
 
 		colQuerier := bson.M{"_id": id}
 		for _, value := range reqBody.Members {
+
 			removeMembers := bson.M{"$pull": bson.M{"members": bson.M{"userid": value}}}
 			err := dw.mongo.C(org).Update(colQuerier, removeMembers)
-			CheckErr(err, "Mongo failed to remove members from the provided tree")
+			if err != nil {
+				CheckErr(err, "Mongo failed to remove members from the provided tree", c)
+				return
+			}
 
 			// Remove trees from user's doc in Users
 			memberId := bson.ObjectIdHex(value)
@@ -28,9 +32,12 @@ func (dw *DoWorkResource) DeleteMembers(c *gin.Context) {
 			colQuerier2 := bson.M{"_id": memberId}
 			updateUsersDoc := bson.M{"$pull": bson.M{"trees": bson.M{"treeid": treeId}}}
 			err2 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
-			CheckErr(err2, "Mongo failed to remove tree from user's document in Users")
+			if err2 != nil {
+				CheckErr(err2, "Mongo failed to remove tree from user's document in Users", c)
+				return
+			}
 		}
-		c.JSON(200, "You have successfully removed members from the tree")
+		c.JSON(200, SuccessMsg{"You have successfully removed members from the tree"})
 
 		// otherwise remove member from org's members array
 	} else {
@@ -38,15 +45,22 @@ func (dw *DoWorkResource) DeleteMembers(c *gin.Context) {
 		for _, value := range reqBody.Members {
 			removeMembers := bson.M{"$pull": bson.M{"members": bson.M{"userid": value}}}
 			err := dw.mongo.C(org).Update(colQuerier, removeMembers)
-			CheckErr(err, "Mongo failed to remove members from "+org+" organization")
+			if err != nil {
+				CheckErr(err, "Mongo failed to remove members from "+org+" organization", c)
+				return
+			}
 
 			// Remove org from user's doc in Users
 			memberId := bson.ObjectIdHex(value)
 			colQuerier2 := bson.M{"_id": memberId}
 			updateUsersDoc := bson.M{"$pull": bson.M{"orgs": org}}
 			err2 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
-			CheckErr(err2, "Mongo failed to remove org from user's document in Users")
+			if err2 != nil {
+				CheckErr(err2, "Mongo failed to remove org from user's document in Users", c)
+				return
+			}
+
 		}
-		c.JSON(200, "You have successfully removed members from the "+org+" organization")
+		c.JSON(200, SuccessMsg{"You have successfully removed members from the " + org + " organization"})
 	}
 }

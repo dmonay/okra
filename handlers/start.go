@@ -35,7 +35,11 @@ func Run(cfg common.Config) error {
 
 	// initialize mongo
 	mongodb, err := InitMongo()
-	CheckErr(err, "MongoDB failed to initialize")
+	if err != nil {
+		colorMsg := "\x1b[31;1mMongoDB failed to initialize\x1b[0m"
+		log.Fatalln(colorMsg, err)
+		return err
+	}
 	// defer mongodb.Close()
 
 	doWorkResource := &DoWorkResource{mongo: mongodb}
@@ -84,31 +88,14 @@ func Run(cfg common.Config) error {
 
 func InitMongo() (*mgo.Database, error) {
 	session, err := mgo.Dial("localhost:27017")
-	CheckErr(err, "mongo connection failed")
+	if err != nil {
+		colorMsg := "\x1b[31;1mMongo connection failed\x1b[0m"
+		log.Fatalln(colorMsg, err)
+	}
 
 	db := session.DB("testing")
 
 	return db, nil
-}
-
-func CheckErr(err error, msg string) {
-	if err != nil {
-		log.Println(msg, err)
-	}
-}
-
-type ErrorMsg struct {
-	Error string "json:'Error'"
-}
-
-type SuccessMsg struct {
-	Success string "json:'Success'"
-}
-
-func CheckErr3(err error, msg string, c *gin.Context) {
-	colorMsg := "\x1b[31;1m" + msg + "\x1b[0m"
-	log.Println(colorMsg, err)
-	c.JSON(400, ErrorMsg{msg})
 }
 
 var Commands = []cli.Command{
