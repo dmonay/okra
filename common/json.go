@@ -52,3 +52,13 @@ type KeyResultJson struct {
 	Members   []Member `json:"members"`
 	Priority  string   `json:"priority"`
 }
+
+type TaskJson struct {
+	Id        string   `json:"id"`
+	TreeId    string   `json:"treeId,omitempty"`
+	Name      string   `json:"name"`
+	Body      string   `json:"body"`
+	Completed bool     `json:"completed"`
+	Members   []Member `json:"members"`
+	Priority  string   `json:"priority"`
+}

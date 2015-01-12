@@ -80,6 +80,7 @@ func Run(cfg common.Config) error {
 	r.POST("/update/objective/properties/:organization/:treeid/:objective/:kr", doWorkResource.UpdateKrProperties)
 
 	// tasks
+	r.POST("/create/kr/:organization/:objective/:kr", doWorkResource.CreateTask)
 
 	r.Run(cfg.SvcHost)
 

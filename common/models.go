@@ -59,6 +59,7 @@ type KeyResultsModel struct {
 }
 
 type TasksModel struct {
+	Id        string
 	Name      string
 	Body      string
 	Completed bool
