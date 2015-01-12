@@ -93,8 +93,22 @@ func InitMongo() (*mgo.Database, error) {
 
 func CheckErr(err error, msg string) {
 	if err != nil {
-		log.Fatalln(msg, err)
+		log.Println(msg, err)
 	}
+}
+
+type ErrorMsg struct {
+	Error string "json:'Error'"
+}
+
+type SuccessMsg struct {
+	Success string "json:'Success'"
+}
+
+func CheckErr3(err error, msg string, c *gin.Context) {
+	colorMsg := "\x1b[31;1m" + msg + "\x1b[0m"
+	log.Println(colorMsg, err)
+	c.JSON(400, ErrorMsg{msg})
 }
 
 var Commands = []cli.Command{

@@ -58,7 +58,11 @@ func (dw *DoWorkResource) UpdateKrProperties(c *gin.Context) {
 	querier := bson.M{"_id": id, "objectives.id": obj}
 	updateName := bson.M{"$set": myMap}
 	err := dw.mongo.C(org).Update(querier, updateName)
-	CheckErr(err, "Mongo failed to update key result's properties")
 
-	c.JSON(201, "Success")
+	if err != nil {
+		CheckErr3(err, "Mongo failed to update key result's properties", c)
+		return
+	}
+
+	c.JSON(201, SuccessMsg{"Key result updated!"})
 }

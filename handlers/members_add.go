@@ -21,23 +21,34 @@ func (dw *DoWorkResource) AddMembers(c *gin.Context) {
 			// Get userId of user
 			var result common.UsersObj
 			err := dw.mongo.C("Users").Find(bson.M{"username": value.Username}).One(&result)
-			CheckErr(err, "Mongo failed to find the "+value.Username+"'s doc in Users")
+			if err != nil {
+				CheckErr3(err, "Mongo failed to find "+value.Username+"'s doc in Users", c)
+				return
+			}
+
 			value.UserId = result.Id.Hex()
 
 			// Add member to tree
 			addMembers := bson.M{"$push": bson.M{"members": value}}
 			err2 := dw.mongo.C(org).Update(colQuerier, addMembers)
-			CheckErr(err2, "Mongo failed to add members to the provided tree")
+			if err2 != nil {
+				CheckErr3(err, "Mongo failed to add members to the provided tree", c)
+				return
+			}
 
 			// Update user's doc in Users with the ObjId and name of the tree
 			tree := common.UserTree{reqBody.TreeName, treeId}
 			colQuerier2 := bson.M{"_id": result.Id}
 			updateUsersDoc := bson.M{"$push": bson.M{"trees": tree}}
 			err3 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
-			CheckErr(err3, "Mongo failed to add tree to user's document in Users")
+			if err3 != nil {
+				CheckErr3(err3, "Mongo failed to add tree to user's document in Users", c)
+				return
+			}
+
 		}
 
-		c.JSON(201, "You have successfully added members to the tree")
+		c.JSON(201, SuccessMsg{"You have successfully added members to the tree"})
 
 		// otherwise update org's members array
 	} else {
@@ -47,20 +58,30 @@ func (dw *DoWorkResource) AddMembers(c *gin.Context) {
 			// Get userId of user
 			var result common.UsersObj
 			err := dw.mongo.C("Users").Find(bson.M{"username": value.Username}).One(&result)
-			CheckErr(err, "Mongo failed to find the "+value.Username+"'s doc in Users")
+			if err != nil {
+				CheckErr3(err, "Mongo failed to find "+value.Username+"'s doc in Users", c)
+				return
+			}
 			value.UserId = result.Id.Hex()
 
 			// add user to the org
 			addMembers := bson.M{"$push": bson.M{"members": value}}
 			err3 := dw.mongo.C(org).Update(colQuerier, addMembers)
-			CheckErr(err3, "Mongo failed to add members to "+org+" organization")
+			if err3 != nil {
+				CheckErr3(err3, "Mongo failed to add members to "+org+" organization", c)
+				return
+			}
 
 			// Update user's doc in Users with the name of the org
 			colQuerier2 := bson.M{"username": value.Username}
 			updateUsersDoc := bson.M{"$push": bson.M{"orgs": org}}
 			err2 := dw.mongo.C("Users").Update(colQuerier2, updateUsersDoc)
-			CheckErr(err2, "Mongo failed to add org to user's document in Users")
+			if err2 != nil {
+				CheckErr3(err2, "Mongo failed to add org to user's document in Users", c)
+				return
+			}
 		}
-		c.JSON(201, "You have successfully added members to the "+org+" organization")
+
+		c.JSON(201, SuccessMsg{"You have successfully added members to the " + org + " organization"})
 	}
 }

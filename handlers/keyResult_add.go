@@ -19,8 +19,10 @@ func (dw *DoWorkResource) CreateKeyResult(c *gin.Context) {
 		// Get userId of user
 		var result common.UsersObj
 		err := dw.mongo.C("Users").Find(bson.M{"username": value.Username}).One(&result)
-		CheckErr(err, "Mongo failed to find the "+value.Username+"'s doc in Users")
-
+		if err != nil {
+			CheckErr3(err, "Mongo failed to find the "+value.Username+"'s doc in Users", c)
+			return
+		}
 		memObj := common.Member{value.Username, result.Id.Hex(), value.Role}
 		arrayOfMembers = append(arrayOfMembers, memObj)
 	}
@@ -39,7 +41,11 @@ func (dw *DoWorkResource) CreateKeyResult(c *gin.Context) {
 	colQuerier := bson.M{"_id": treeId, "objectives.id": obj}
 	addKeyResult := bson.M{"$push": bson.M{"objectives.$.keyresults": kr}}
 	err := dw.mongo.C(org).Update(colQuerier, addKeyResult)
-	CheckErr(err, "Mongo failed to add key result")
 
-	c.JSON(201, "You have successfully added a key result to "+obj)
+	if err != nil {
+		CheckErr3(err, "Mongo failed to add key result", c)
+		return
+	}
+
+	c.JSON(201, SuccessMsg{"You have successfully added a key result to " + obj})
 }
