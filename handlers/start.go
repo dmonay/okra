@@ -77,10 +77,11 @@ func Run(cfg common.Config) error {
 	r.POST("/create/objective/:organization", doWorkResource.CreateObjective)
 	r.POST("/update/objective/properties/:organization/:treeid/:objective", doWorkResource.UpdateObjProperties)
 	r.POST("/create/kr/:organization/:objective", doWorkResource.CreateKeyResult)
-	r.POST("/update/objective/properties/:organization/:treeid/:objective/:kr", doWorkResource.UpdateKrProperties)
+	r.POST("/update/kr/properties/:organization/:treeid/:objective/:kr", doWorkResource.UpdateKrProperties)
 
 	// tasks
-	r.POST("/create/kr/:organization/:objective/:kr", doWorkResource.CreateTask)
+	r.POST("/create/task/:organization/:objective/:kr", doWorkResource.CreateTask)
+	r.POST("/update/task/properties/:organization/:treeid/:objective/:kr/:task", doWorkResource.UpdateTaskProperties)
 
 	r.Run(cfg.SvcHost)
 

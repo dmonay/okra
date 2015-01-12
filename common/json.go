@@ -62,3 +62,17 @@ type TaskJson struct {
 	Members   []Member `json:"members"`
 	Priority  string   `json:"priority"`
 }
+
+type KrPropertiesJson struct {
+	KrName    string      `json:"krName",omitempty`
+	KrBody    string      `json:"krbody",omitempty`
+	Priority  string      `json:"priority",omitempty`
+	Completed interface{} `json:"completed",omitempty`
+}
+
+type TaskPropertiesJson struct {
+	TaskName  string      `json:"taskname",omitempty`
+	TaskBody  string      `json:"taskbody",omitempty`
+	Priority  string      `json:"priority",omitempty`
+	Completed interface{} `json:"completed",omitempty`
+}

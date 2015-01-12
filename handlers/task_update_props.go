@@ -6,17 +6,18 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func (dw *DoWorkResource) UpdateKrProperties(c *gin.Context) {
+func (dw *DoWorkResource) UpdateTaskProperties(c *gin.Context) {
 	org := c.Params.ByName("organization")
 	treeId := c.Params.ByName("treeid")
 	obj := c.Params.ByName("objective")
-	kr := c.Params.ByName("kr")
+	krIndex := c.Params.ByName("kr")
+	taskIndex := c.Params.ByName("task")
 	id := bson.ObjectIdHex(treeId)
 
-	var reqBody common.KrPropertiesJson
+	var reqBody common.TaskPropertiesJson
 	c.Bind(&reqBody)
-	newName := reqBody.KrName
-	newBody := reqBody.KrBody
+	newName := reqBody.TaskName
+	newBody := reqBody.TaskBody
 	newStatus := reqBody.Completed
 	newPriority := reqBody.Priority
 
@@ -28,10 +29,10 @@ func (dw *DoWorkResource) UpdateKrProperties(c *gin.Context) {
 	// so I can't use the index of the nested array inside the objectives document.
 	// Thus I need the index of the array beforehand, and this is currently,
 	// temporarily passed in as the last URL param
-	nameKey := "objectives.$.keyresults." + kr + ".name"
-	bodyKey := "objectives.$.keyresults." + kr + ".body"
-	statusKey := "objectives.$.keyresults." + kr + ".completed"
-	prioritiesKey := "objectives.$.keyresults." + kr + ".priority"
+	nameKey := "objectives.$.keyresults." + krIndex + ".tasks." + taskIndex + ".name"
+	bodyKey := "objectives.$.keyresults." + krIndex + ".tasks." + taskIndex + ".body"
+	statusKey := "objectives.$.keyresults." + krIndex + ".tasks." + taskIndex + ".completed"
+	prioritiesKey := "objectives.$.keyresults." + krIndex + ".tasks." + taskIndex + ".priority"
 
 	if newName != "" {
 		myMap[nameKey] = newName
@@ -53,9 +54,9 @@ func (dw *DoWorkResource) UpdateKrProperties(c *gin.Context) {
 	updateName := bson.M{"$set": myMap}
 	err := dw.mongo.C(org).Update(querier, updateName)
 	if err != nil {
-		CheckErr(err, "Mongo failed to update key result's properties", c)
+		CheckErr(err, "Mongo failed to update task's properties", c)
 		return
 	}
 
-	c.JSON(201, SuccessMsg{"Key result updated!"})
+	c.JSON(201, SuccessMsg{"Task updated!"})
 }
