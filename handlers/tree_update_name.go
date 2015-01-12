@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -10,11 +11,7 @@ func (dw *DoWorkResource) UpdateTreeName(c *gin.Context) {
 	treeId := c.Params.ByName("treeid")
 	id := bson.ObjectIdHex(treeId)
 
-	type TreeNameJson struct {
-		TreeName string `json:"treename"`
-	}
-
-	var reqBody TreeNameJson
+	var reqBody common.TreeNameJson
 	c.Bind(&reqBody)
 	newName := reqBody.TreeName
 

@@ -21,6 +21,15 @@ type TreeJson struct {
 	UserRole  string `json:"role"`
 }
 
+type TreeNameJson struct {
+	TreeName string `json:"treename"`
+}
+
+type MissionJson struct {
+	Mission string `json:"mission"`
+	TreeId  string `json:"treeId,omitempty"`
+}
+
 type MembersJson struct {
 	UpdateTree bool     `json:"updateTree,omitempty"`
 	TreeName   string   `json:"treeName,omitempty"`
@@ -61,6 +70,12 @@ type TaskJson struct {
 	Completed bool     `json:"completed"`
 	Members   []Member `json:"members"`
 	Priority  string   `json:"priority"`
+}
+
+type ObjPropertiesJson struct {
+	ObjName   string      `json:"objName",omitempty`
+	ObjBody   string      `json:"objbody",omitempty`
+	Completed interface{} `json:"completed",omitempty`
 }
 
 type KrPropertiesJson struct {

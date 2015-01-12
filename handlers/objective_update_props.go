@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -11,13 +12,7 @@ func (dw *DoWorkResource) UpdateObjProperties(c *gin.Context) {
 	obj := c.Params.ByName("objective")
 	id := bson.ObjectIdHex(treeId)
 
-	type ObjPropertiesJson struct {
-		ObjName   string      `json:"objName",omitempty`
-		ObjBody   string      `json:"objbody",omitempty`
-		Completed interface{} `json:"completed",omitempty`
-	}
-
-	var reqBody ObjPropertiesJson
+	var reqBody common.ObjPropertiesJson
 	c.Bind(&reqBody)
 	newName := reqBody.ObjName
 	newBody := reqBody.ObjBody

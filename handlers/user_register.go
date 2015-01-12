@@ -7,12 +7,7 @@ import (
 
 func (dw *DoWorkResource) Register(c *gin.Context) {
 
-	type User struct {
-		Username string
-	}
-
 	var user common.UserJson
-
 	c.Bind(&user)
 
 	uname := user.Username

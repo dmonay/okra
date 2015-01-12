@@ -1,19 +1,15 @@
 package handlers
 
 import (
+	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func (dw *DoWorkResource) UpdateMission(c *gin.Context) {
 
-	type MissionJson struct {
-		Mission string `json:"mission"`
-		TreeId  string `json:"treeId,omitempty"`
-	}
-
 	org := c.Params.ByName("organization")
-	var reqBody MissionJson
+	var reqBody common.MissionJson
 
 	c.Bind(&reqBody)
 
