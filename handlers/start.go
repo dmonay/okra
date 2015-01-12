@@ -70,8 +70,10 @@ func Run(cfg common.Config) error {
 	r.DELETE("/update/members/:organization", doWorkResource.DeleteMembers)
 
 	// objectives and key results
-	r.POST("/update/objective/:organization", doWorkResource.UpdateObjective)
+	r.POST("/create/objective/:organization", doWorkResource.CreateObjective)
+	r.POST("/update/objective/properties/:organization/:treeid/:objective", doWorkResource.UpdateObjProperties)
 	r.POST("/create/kr/:organization/:objective", doWorkResource.CreateKeyResult)
+	r.POST("/update/objective/properties/:organization/:treeid/:objective/:kr", doWorkResource.UpdateKrProperties)
 
 	// tasks
 

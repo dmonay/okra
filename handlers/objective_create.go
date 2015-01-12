@@ -6,7 +6,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func (dw *DoWorkResource) UpdateObjective(c *gin.Context) {
+func (dw *DoWorkResource) CreateObjective(c *gin.Context) {
 
 	org := c.Params.ByName("organization")
 	var reqBody common.ObjectiveJson
