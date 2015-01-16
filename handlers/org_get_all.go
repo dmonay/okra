@@ -7,8 +7,8 @@ import (
 )
 
 func (dw *DoWorkResource) GetAllOrgs(c *gin.Context) {
-	org := c.Params.ByName("userid")
-	id := bson.ObjectIdHex(org)
+	userid := c.Params.ByName("userid")
+	id := bson.ObjectIdHex(userid)
 
 	var result common.UsersObj
 	err := dw.mongo.C("Users").Find(bson.M{"_id": id}).One(&result)

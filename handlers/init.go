@@ -56,9 +56,13 @@ func Run(cfg common.Config) error {
 	r.POST("/login", doWorkResource.Login)
 	r.POST("/logout", doWorkResource.Logout)
 
+	// users
+	r.GET("/get/users/all/:user", doWorkResource.GetAllUsers)
+
 	// orgs
 	r.POST("/create/organization", doWorkResource.CreateOrg)
-	r.GET("/get/orgs/:userid", doWorkResource.GetAllOrgs)
+	r.GET("/get/orgs/all/:userid", doWorkResource.GetAllOrgs)
+	r.GET("/get/orgs/members/:org", doWorkResource.GetMembers)
 
 	// trees
 	r.POST("/create/tree/:organization", doWorkResource.CreateTree)

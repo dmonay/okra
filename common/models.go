@@ -27,6 +27,12 @@ type UsersObj struct {
 	Id       bson.ObjectId `bson:"_id"`
 }
 
+type MembersInOrg struct {
+	Id      bson.ObjectId `bson:"_id"`
+	Members []Member      `bson:"members"`
+	Name    string        `bson:"name"`
+}
+
 type OkrTree struct {
 	Id         bson.ObjectId `bson:"_id"`
 	Type       string

@@ -54,5 +54,10 @@ func (dw *DoWorkResource) CreateTree(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, SuccessMsg{treeStruct})
+	result := &common.TreeInOrg{
+		treeName,
+		id,
+		true,
+	}
+	c.JSON(201, SuccessMsg{result})
 }
