@@ -13,6 +13,11 @@ type OrganizationJson struct {
 	UserRole     string `json:"role"`
 }
 
+type OrgUpdateNameJson struct {
+	OldName string `json:"oldName"`
+	NewName string `json:"newName"`
+}
+
 type TreeJson struct {
 	TreeName  string `json:"treeName"`
 	Timeframe string `json:"timeframe"`

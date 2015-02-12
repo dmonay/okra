@@ -15,7 +15,8 @@ type SuccessMsg struct {
 }
 
 type DoWorkResource struct {
-	mongo *mgo.Database
+	mongo   *mgo.Database
+	session *mgo.Session
 }
 
 func CheckErr(err error, msg string, c *gin.Context) {
