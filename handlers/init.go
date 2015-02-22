@@ -99,11 +99,13 @@ func Run(cfg common.Config) error {
 func InitMongo() (*mgo.Database, *mgo.Session, error) {
 
 	uri := os.Getenv("MONGOHQ_URL")
+	fmt.Println("uri: ", uri)
 	if uri == "" {
 		fmt.Println("\x1b[31;1mno connection string provided\x1b[0m")
 		os.Exit(1)
 	}
 	db_name := os.Getenv("MONGOHQ_DB")
+	fmt.Println("db: ", db_name)
 	if db_name == "" {
 		fmt.Println("\x1b[31;1mno db name provided\x1b[0m")
 		os.Exit(1)
