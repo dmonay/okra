@@ -97,13 +97,24 @@ func Run(cfg common.Config) error {
 }
 
 func InitMongo() (*mgo.Database, *mgo.Session, error) {
-	session, err := mgo.Dial("localhost:27017")
+
+	uri := os.Getenv("MONGOHQ_URL")
+	if uri == "" {
+		fmt.Println("\x1b[31;1mno connection string provided\x1b[0m")
+		os.Exit(1)
+	}
+	db_name := os.Getenv("MONGOHQ_DB")
+	if db_name == "" {
+		fmt.Println("\x1b[31;1mno db name provided\x1b[0m")
+		os.Exit(1)
+	}
+	session, err := mgo.Dial(uri)
 	if err != nil {
 		colorMsg := "\x1b[31;1mMongo connection failed\x1b[0m"
 		log.Fatalln(colorMsg, err)
 	}
 
-	db := session.DB("testing")
+	db := session.DB(db_name)
 
 	return db, session, nil
 }
