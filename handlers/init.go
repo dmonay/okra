@@ -34,7 +34,7 @@ func getConfig(c *cli.Context) (common.Config, error) {
 func Run(cfg common.Config) error {
 
 	// initialize mongo
-	mongodb, session, err := InitMongo()
+	mongodb, err := InitMongo()
 	if err != nil {
 		colorMsg := "\x1b[31;1mMongoDB failed to initialize\x1b[0m"
 		log.Fatalln(colorMsg, err)
@@ -43,8 +43,7 @@ func Run(cfg common.Config) error {
 	// defer mongodb.Close()
 
 	doWorkResource := &DoWorkResource{
-		mongo:   mongodb,
-		session: session,
+		mongo: mongodb,
 	}
 
 	r := gin.New()
@@ -96,7 +95,7 @@ func Run(cfg common.Config) error {
 	return nil
 }
 
-func InitMongo() (*mgo.Database, *mgo.Session, error) {
+func InitMongo() (*mgo.Database, error) {
 
 	uri := os.Getenv("MONGOHQ_URL")
 	fmt.Println("uri: ", uri)
@@ -110,15 +109,18 @@ func InitMongo() (*mgo.Database, *mgo.Session, error) {
 		fmt.Println("\x1b[31;1mno db name provided\x1b[0m")
 		os.Exit(1)
 	}
-	session, err := mgo.Dial(uri)
+	url := uri + "/" + db_name
+	fmt.Println("uri: ", url)
+	session, err := mgo.Dial(url)
 	if err != nil {
 		colorMsg := "\x1b[31;1mMongo connection failed\x1b[0m"
 		log.Fatalln(colorMsg, err)
 	}
+	defer session.Close()
 
 	db := session.DB(db_name)
 
-	return db, session, nil
+	return db, nil
 }
 
 var Commands = []cli.Command{
