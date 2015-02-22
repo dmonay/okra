@@ -90,7 +90,12 @@ func Run(cfg common.Config) error {
 	r.POST("/create/task/:organization/:objective/:kr", doWorkResource.CreateTask)
 	r.POST("/update/task/properties/:organization/:treeid/:objective/:kr/:task", doWorkResource.UpdateTaskProperties)
 
-	r.Run(cfg.SvcHost)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = cfg.SvcHost
+	}
+	fmt.Println("port: ", port)
+	r.Run(port)
 
 	return nil
 }
