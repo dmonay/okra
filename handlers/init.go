@@ -115,13 +115,12 @@ func InitMongo() (*mgo.Database, error) {
 		os.Exit(1)
 	}
 	url := uri + "/" + db_name
-	fmt.Println("uri: ", url)
+	fmt.Println("full url: ", url)
 	session, err := mgo.Dial(url)
 	if err != nil {
 		colorMsg := "\x1b[31;1mMongo connection failed\x1b[0m"
 		log.Fatalln(colorMsg, err)
 	}
-	defer session.Close()
 
 	db := session.DB(db_name)
 
