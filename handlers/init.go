@@ -95,7 +95,7 @@ func Run(cfg common.Config) error {
 		port = cfg.SvcHost
 	}
 	fmt.Println("port: ", port)
-	r.Run(port)
+	r.Run(":" + port)
 
 	return nil
 }
