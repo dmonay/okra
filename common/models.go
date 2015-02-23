@@ -24,7 +24,10 @@ type UsersObj struct {
 	Username string        `json:"username"`
 	Orgs     []string      `bson:"orgs" omitempty`
 	Trees    []string      `bson:"trees" omitempty`
-	Id       bson.ObjectId `bson:"_id"`
+	First    string        `json:"first"`
+	Last     string        `json:"last"`
+	GaUser   interface{}   `json:"gaUser"`
+	Id       bson.ObjectId `bson:"_id" omitempty`
 }
 
 type MembersInOrg struct {

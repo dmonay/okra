@@ -1,9 +1,10 @@
 package common
 
 type UserJson struct {
-	Username string   `json:"username"`
-	Orgs     []string `bson:"orgs" omitempty`
-	Trees    []string `bson:"trees" omitempty`
+	Username string      `json:"username"`
+	First    string      `json:"first"`
+	Last     string      `json:"last"`
+	GaUser   interface{} `json:"gaUser"`
 }
 
 type OrganizationJson struct {
