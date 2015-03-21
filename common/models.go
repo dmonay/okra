@@ -21,13 +21,12 @@ type Member struct {
 }
 
 type UsersObj struct {
-	Username string        `json:"username"`
-	Orgs     []string      `bson:"orgs" omitempty`
-	Trees    []string      `bson:"trees" omitempty`
-	First    string        `json:"first"`
-	Last     string        `json:"last"`
-	GaUser   interface{}   `json:"gaUser"`
-	Id       bson.ObjectId `bson:"_id" omitempty`
+	Username    string        `json:"username"`
+	Orgs        []string      `bson:"orgs" omitempty`
+	Trees       []string      `bson:"trees" omitempty`
+	DisplayName string        `json:"displayName"`
+	Gid         interface{}   `json:"gid"`
+	Id          bson.ObjectId `bson:"_id" omitempty`
 }
 
 type MembersInOrg struct {

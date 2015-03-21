@@ -48,17 +48,22 @@ func Run(cfg common.Config) error {
 
 	r := gin.New()
 
+	allowed := make([]string, 1)
+	env := os.Getenv("MONGOHQ_URL")
+	if env == "localhost:27017" {
+		allowed = append(allowed, "http://localhost:5555")
+	} else {
+		allowed = append(allowed, os.Getenv("ALLOWED_DOMAIN"))
+	}
+	fmt.Println(allowed)
 	// middlewares
-	r.Use(cors.Middleware(cors.Options{}))
+	r.Use(cors.Middleware(cors.Options{AllowOrigins: allowed}))
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
 	// user
 	r.POST("/register", doWorkResource.Register)
-	r.POST("/login", doWorkResource.Login)
-	r.POST("/logout", doWorkResource.Logout)
-
-	// users
+	r.GET("/user/:gid", doWorkResource.GetOneUser)
 	r.GET("/get/users/all/:user", doWorkResource.GetAllUsers)
 
 	// orgs
