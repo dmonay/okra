@@ -51,11 +51,12 @@ func Run(cfg common.Config) error {
 	allowed := make([]string, 1)
 	env := os.Getenv("MONGOHQ_URL")
 	if env == "localhost:27017" {
-		allowed = append(allowed, "http://localhost:5555")
+		allowed = append(allowed, "http://localhost:3333")
 	} else {
 		allowed = append(allowed, os.Getenv("ALLOWED_DOMAIN"))
 	}
-	fmt.Println(allowed)
+	fmt.Println("Allowed origin:", allowed)
+
 	// middlewares
 	r.Use(cors.Middleware(cors.Options{AllowOrigins: allowed}))
 	r.Use(gin.Logger())
