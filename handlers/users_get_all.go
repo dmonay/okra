@@ -1,11 +1,9 @@
 package handlers
 
 import (
-	"github.com/dmonay/okra/authentication"
 	"github.com/dmonay/okra/common"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
-	"os"
 )
 
 func (dw *DoWorkResource) GetAllUsers(c *gin.Context) {
@@ -17,20 +15,11 @@ func (dw *DoWorkResource) GetAllUsers(c *gin.Context) {
 		CheckErr(err, "Failed to get all users", c)
 		return
 	}
-	result := make(map[string][]byte)
+	result := make(map[string]bson.ObjectId)
 	count := 0
 	for _, value := range results {
 		count++
-		rawKey := os.Getenv("SECRET")
-		key := []byte(rawKey) // 32 bytes
-		plaintext := []byte(value.Id)
-
-		ciphertext, err2 := authentication.Encrypt(key, plaintext)
-		if err2 != nil {
-			CheckErr(err2, "Failed to encrypt key", c)
-			return
-		}
-		result[value.Username] = ciphertext
+		result[value.Username] = value.Id
 		if count == 7 {
 			break
 		}
